@@ -1,0 +1,162 @@
+\documentclass[12pt,a4paper]{article}
+
+%pacotes necessários
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows.meta}
+\usepackage{float}
+\usepackage{booktabs}
+
+%margens 
+\geometry{
+    left= 3cm,
+    right= 2cm,
+    top= 3cm,
+    bottom= 2cm
+}
+
+\begin{document}
+
+%capa
+\begin{titlepage}
+\centering
+
+{\large CENTRO UNIVERSITÁRIO MAURÍCIO DE NASSAU}\\[1cm]
+
+{\large CURSO DE CIÊNCIA DA COMPUTAÇÃO}\\[3cm]
+
+{\Large\textbf{ANALISADOR LÉXICO (SCANNER)}}\\[2cm]
+
+Alessandra Júlia Santos Mendonça - 01710330\\
+Jhonas Xavier dos Santos SILVA - 01694333\\
+Marcos Emanuel Celestino Tavares - 01718690\\
+Guilherme de Oliveira Lopes Silva - 01699872\\
+Alan Sergio Rodrigues de Carvalho - 01697157\\
+Alfred Manoel Vincente Silva da Rocha - 01695802\\
+Pedro Artur Rolemberg Ferreira Nogueira - 01705061\\
+
+\vfill
+{\large Maceió - AL}\\
+{\large 2026}
+
+\end{titlepage}
+
+%sumário
+\tableofcontents
+\newpage
+
+
+\section{Introdução}
+
+O desenvolvimento de uma mini-linguagem de programação envolve a definição de uma estrutura própria de representação de comandos, estabelecendo regras que determinam como as instruções devem ser escritas e interpretadas. Nesse contexto, o presente projeto propõe a criação de uma mini-linguagem fundamentada no paradigma de programação orientada a eventos, cuja sintaxe e semântica são inspiradas em comportamentos e ações associados aos ratos.
+
+A proposta consiste em estabelecer uma linguagem temática na qual os elementos utilizados na construção dos comandos estejam relacionados a situações e comportamentos desses animais. Dessa maneira, conceitos como eventos e ações servem como referência para a organização das instruções, proporcionando uma identidade própria à linguagem e uma abordagem diferenciada para a aplicação dos conceitos de linguagens formais.
+
+No âmbito técnico, o projeto concentra-se no desenvolvimento de um analisador léxico (Scanner), responsável por percorrer o código-fonte e identificar os elementos que constituem a mini-linguagem, classificando-os de acordo com categorias previamente definidas, denominadas tokens. Esse processo permite reconhecer palavras reservadas, identificadores, operadores e demais componentes léxicos, conforme as regras estabelecidas para a linguagem.
+
+Dessa forma, o trabalho busca aplicar conhecimentos relacionados às linguagens formais, expressões regulares e autômatos finitos na construção de um analisador léxico funcional, demonstrando como os fundamentos teóricos da computação podem ser utilizados na definição e no reconhecimento dos elementos de uma linguagem de programação própria.
+
+\section{Objetivos}
+
+Desenvolver e documentar a especificaç~´ao de um analisador léxico (Scanner) para uma linguagem de programação temática, utilizando os conceitos de linguagens formais, expressões regulares e autômatos finitos determinísticos, com a finalidade de reconhecer e classificar os elementos léxicos presentes no código-fonte. 
+
+\subsection{Objetivo Geral}
+\begin{itemize}
+
+    \item Definir o alfabeto e as categorias de tokens de linguagens; 
+    \item Estabelecer expressões regulares parqa representar os padões léxicos; 
+    \item Modelar autômatos finitos determinísticos para o reconhecimento dee identificadores, números e opradores; 
+    \item Descrever o processo de identificação e classificação dos lexemas; 
+    \item Aplicar a estratégiia de maior casamento (\textit{maximal much}) durante o reconhecimento dos tokens; 
+    \item Expecificar mecanismos para identificação e tratamento de erros léxicos; 
+    \item Documentar e analisar os testes realizados pelo Scanner.
+
+\end{itemize}
+
+    
+\subsection{Objetivos Específicos}
+
+\section{Fundamentação Teórica}
+\subsection{Compiladores e Análise Léxica}
+Um copilador é um programa responsável por traduzir um código escrito em uma lingujagem de programação para outra representação, geralmente uma linguagem de máquina ou uma forma intermediária. Esse processo é dividido em etapas, que analisam diferentes aspectos do código-fonte. 
+
+A análise léxica é uma das primeiras etapas desse processo. Sua responsabilidade é percorrer o código fonte, identificar sequências de caracteres que foram unidade significativas e classificá-las em categorias denominadas tokens. 
+
+O componente responsável por essa atividade é chamado de analisador léxico ou scanner. Além de reconhecere os elementos válidos da linguagem, ele também pode identificar caracteres inválidos e informar a ocorrência de erros léxicos. 
+
+\subsection{Tokens e Lexemas}
+
+Token é a classificação atribuída a uma unidade reconhecida durante a análise léxica. Já o lexema corresponde à sequência de caracteres presentes no código-fonte que representa determinado token. 
+
+Por exemplo, considerando a instrução
+
+\begin{lstlisting}
+    roer queijo = 18;
+\end{lstlisting}
+
+O Scanner deverá reconhecer os lexemas \texttt{roer}, \texttt{queijo}, \texttt{=}, \texttt{10} e \texttt{;}, atribuindo a cada um sua respectiva categoria léxica. 
+
+\subsection{Expressões Regulares}
+
+Expressões regulares são representações formais utilizadas para descrever padrões de cadeias de caracteres. Elas permitem definir quais sequências pertencfem a determinadas linguagenbs regulares. 
+
+No desenvolvimento do Scanner, as expressões regulares são utilizadas para especificar os padrões de reconhecimento dos tokens, como identificadores, números inteiros, números decimais e operadores. 
+
+\subsection{Autômatos Finitos}
+
+Autômatos finitos são modelos matemáticos utilizados para reconhecer linguagens regulares. Um autômato finito determinístico é definido por um conjunto de estados, um alfabeto, uma função de transição, um estado inicial e um conjunto de estados finais. 
+
+\section{Metodologia}
+
+\section{Desenvolvimento do Scanner}
+\subsection{Especificação da Linguagem e Categorias de Tokens}
+\subsection{Modelagem Matemática e Expressões Regulares}
+
+\subsection{Implementação e Funcionamento do Scanner}
+
+O Scanner realiza a leitura do código-fonte de maneira sequencial, analisando os caracteres e identificando os padrões correspondentes às categorias de tokens definidas na linguagem. 
+
+Durante esse processo, são utilizadas as transições dos autômatos para determinar se uma sequência de caracteres corresponde a um elemento válido. 
+
+Para o reconhecimento dos lexemas, é adotada a estratégia de maior casamento, conhecida como \textit{maximal munch}. Essa estratégia consiste em selecionar a maior sequência possível de caracteres que corresponda a um padrão válido, considernado o último estado de aceitação alcançado. 
+
+Os espaçoes em branco, tabulações e quebras de linha são tratados como separadores, não sendo retornados como tokens. 
+
+Após o reconhecimento, cada lexema é associado à sua respectiva categoria léxica, permitindo que as próximas etapas do processamento recebam uma sequência organizada de tokens. 
+
+\subsection{Tratamento de Erros Léxicos}
+
+O analisador léxico deve identificar caracteres e sequências que não correspondem aos padrões válidos da linguagem. Quando uma entrada inválida é encontrada, o Scanner deve registrar a ocorrência do erro, informando sua localização por meio da linha e da coluna correspondentes. 
+
+Entre as situações previstas estão: 
+\begin{itemize}
+    \item Presença de caracteres que não pertencem ao alfabeto definido; 
+    \item Utilização isolada do símbolo \texttt{!}, sem a formação do operador\texttt{!=};
+    \item Fomração de números decimais incompletos, como \texttt{5.}; 
+    \item Presença de letras ou sublinhados imediatamente após uma sequência numérica, como em \texttt{123abc};
+    \item   Ocorrência de múltiplos pontos em uma sequência numérica, como em \texttt{9.8.7}
+\end{itemize}
+
+Após identificar um erro, o Scanner deve continuar a análise do restante do código-fonte, evitando que uma ocorrência inválida interrompa completamente o processamento. 
+
+\section{Diagramas dos Autômatos}
+\subsection{AFD de Identificadores}
+\subsection{AFD de Números}
+\subsection{AFD de Operadores Relacionais e Atribuição}
+\subsection{AFDs de Operadores Aritméticos e Delimitadores}
+
+\section{Testes e Resultados}
+
+\section{Conclusão}
+
+\section{Referências}
+
+
+\end{document}
