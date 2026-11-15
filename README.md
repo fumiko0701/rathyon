@@ -134,8 +134,9 @@ Erros são reportados como `Erro de sintaxe` ou `Erro ao executar`, com linha e 
 | Marcos Emanuel Celestino Tavares  | 01718690  |
 | Jhonas Xavier dos Santos Silva    | 01694333  |
 | Alessandra Júlia Santos Mendonça  | 01710330  |
-| Guilherme de Oliveira Lopes Silva |           |
-| Vicente Silva da Rocha            |           |
+| Guilherme de Oliveira Lopes Silva | 01699872  |
+| Alfred Vicente Silva da Rocha     | 01695802  |
+| Alan Sergio Rodrigues De Carvalho | 01697157  |
 
 ---
 **_"Raiton é um projeto sem fim lucrativos feito por universitários cansados para o mundo."_**
