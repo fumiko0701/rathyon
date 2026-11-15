@@ -1,9 +1,19 @@
-# Rathyon
+<p align="center">
+  <img src="assets/rathyon_brand.svg" alt="Rathyon" width="240"/>
+</p>
 
-Linguagem de programação interpretada, simples e básica, com sintaxe em português e palavras-chave inspiradas nos movimentos e hábitos de um rato: **roer**, **farejar**, **fujir**, **guinchar**, **escapar**.
+<h3 align="center">
+  Linguagem de programação interpretada, simples e básica,<br/>
+  com sintaxe em português e palavras-chave inspiradas nos<br/>
+  movimentos e hábitos de um rato:
+  <strong>roer</strong>, <strong>farejar</strong>, <strong>fujir</strong>,
+  <strong>guinchar</strong>, <strong>escapar</strong>.
+</h3>
+
+<br/>
 
 - **Extensão:** `.ra`
-- **Versão da linguagem:** 1.0.0
+- **Versão da linguagem:** 0.0.1
 - **Implementação:** Python (interpretador em arquivo único)
 - **Plataforma do instalador:** Windows
 
@@ -139,4 +149,4 @@ Erros são reportados como `Erro de sintaxe` ou `Erro ao executar`, com linha e 
 | Alan Sergio Rodrigues De Carvalho | 01697157  |
 
 ---
-**_"Raiton é um projeto sem fim lucrativos feito por universitários cansados para o mundo."_**
+**_"Rathyon é um projeto sem fim lucrativos feito por universitários cansados para o mundo."_**
