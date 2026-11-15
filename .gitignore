@@ -1,0 +1,31 @@
+#python(montar interpretador)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+
+#ambiente virtual
+.env/
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+#Pyisntaller
+build/
+dist/
+*.spec
+
+#utilidade local
+rathyon_setup/
+.vscode/
+.idea/
+desktop.ini
+*.log
+*.tmp
+*.bak
