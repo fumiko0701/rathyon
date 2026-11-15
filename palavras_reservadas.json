@@ -1,0 +1,15 @@
+{
+  "if": "farejar",
+  "elif": "refarejar",
+  "else": "fujir",
+  "while": "roer",
+  "return": "voltar",
+  "break": "escapar",
+  "True": "cheio",
+  "False": "vazio",
+  "int": "queijo",
+  "float": "migalha",
+  "print": "guinchar",
+  "on": "ouvir",
+  "emit": "sinalizar"
+}
