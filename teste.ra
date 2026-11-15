@@ -1,4 +1,26 @@
 #teste.ra
 nome = "mundo"
 for i in range(3):
-    print(f"Olá, {nome}! {i}")
+    guinchar(f"Olá, {nome}! {i}")
+
+farejar 2 > 1:
+    guinchar("farejar ok")
+
+refarejar 2 > 5:
+    guinchar("refarejar ok")
+fujir:
+    guinchar("fujir ok")
+
+roer cheio:
+    guinchar("roer ok")
+    escapar
+
+guinchar(cheio)
+guinchar(vazio)
+guinchar(queijo(3.9))
+guinchar(migalha(5))
+
+def soma(a, b):
+    voltar a + b
+
+guinchar(soma(2, 3))
