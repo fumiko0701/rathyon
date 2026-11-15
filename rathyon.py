@@ -1,19 +1,29 @@
 #!/usr/bin/env python3
 """
 Rathyon
-Versão 0.0.2
-Como usar: python rathyon.py <arquivo.ra>
+Versão 0.0.4 (Suporte a PyInstaller)
+Como usar: python rathyon.py <arquivo.ra> ou rathyon <arquivo.ra> (após compilar)
 """
 import sys
 import os
 import re
 import json
 
+# --- NOVO: Função para o PyInstaller achar a pasta certa ---
+def obter_diretorio_base():
+    """Retorna a pasta do script original ou a pasta temporária do PyInstaller."""
+    if getattr(sys, 'frozen', False):
+        # Se estiver rodando como .exe (PyInstaller)
+        return sys._MEIPASS
+    # Se estiver rodando como .py normal
+    return os.path.dirname(os.path.abspath(__file__))
+
 #le o .json do colega pra trocar os termos reservados
 def carregar_traducao():
     """Lê config/palavras_reservadas.json e devolve {rathyon: python}."""
+    # --- MUDANÇA MÍNIMA: Usa a função auxiliar em vez do os.path.dirname direto ---
     caminho = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
+        obter_diretorio_base(), 
         "config", "palavras_reservadas.json"
     )
     with open(caminho, encoding="utf-8") as f:
@@ -29,7 +39,7 @@ def traduzir(codigo, mapa):
 
 def main():
     if len(sys.argv) != 2:
-        print("Uso: python rathyon.py <arquivo.ra>")
+        print("Uso: rathyon <arquivo.ra> (ou: python rathyon.py <arquivo.ra>)")
         sys.exit(1)
 
     caminho = sys.argv[1]
@@ -54,7 +64,6 @@ def main():
     codigo = traduzir(codigo, mapa)
 
     #roda .ra como se fosse py puro.
-    # __name__ vira "__main__" dentro do arquivo, igual a `python arquivo.py`.
     try:
         exec(compile(codigo, caminho, "exec"), {"__name__": "__main__", "__file__": caminho})
     except SyntaxError as e:
