@@ -1,0 +1,4 @@
+#teste.ra
+nome = "mundo"
+for i in range(3):
+    print(f"Olá, {nome}! {i}")
