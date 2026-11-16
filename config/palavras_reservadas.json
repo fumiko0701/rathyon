@@ -11,5 +11,9 @@
   "float": "migalha",
   "print": "guinchar",
   "on": "ouvir",
-  "emit": "sinalizar"
+  "emit": "sinalizar",
+  "for": "vasculhar",
+  "in": "dentro",
+  "def": "cavar",
+  "range": "trilha"
 }

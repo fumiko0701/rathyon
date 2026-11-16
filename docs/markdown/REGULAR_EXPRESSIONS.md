@@ -44,8 +44,8 @@ ASSIGNMENT = =
 DELIMITER = ( | ) | { | } | ; | ,
 
 KEYWORD = farejar | refarejar | fujir | roer | queijo | migalha
-          | guinchar | ouvir | sinalizar | voltar | escapar | cheio |
-          vazio
+          | guinchar | ouvir | sinalizar | voltar | escapar | cheio
+          | vazio | vasculhar | dentro | trilha | cavar
 ```
 
 Na tabela de categorias da especificação, ARITHMETIC corresponde a ARITHMETIC_OPERATOR e RELATIONAL corresponde a RELATIONAL_OPERATOR. As expressões acima preservam os nomes utilizados na seção original.
@@ -86,7 +86,7 @@ Reconhece um dos delimitadores: `(`, `)`, `{`, `}`, `;` ou `,`.
 
 ### 4.8 KEYWORD
 
-Reconhece exatamente uma das 13 palavras reservadas:
+Reconhece exatamente uma das 17 palavras reservadas:
 
 | Palavra reservada |
 |---|
@@ -103,8 +103,12 @@ Reconhece exatamente uma das 13 palavras reservadas:
 | escapar |
 | cheio |
 | vazio |
+| vasculhar |
+| dentro |
+| trilha |
+| cavar |
 
-Conforme a especificação atual, `cheio` e `vazio` pertencem à categoria KEYWORD.
+Conforme a especificação atual, `cheio` e `vazio` pertencem à categoria KEYWORD. As palavras `vasculhar`, `dentro`, `trilha` e `cavar` vêm do `teste.ra` e dependem da decisão D02 da especificação.
 
 ## 5. Prioridade de KEYWORD sobre IDENTIFIER
 
@@ -146,7 +150,7 @@ Nesta tabela, “rejeitado” significa que a entrada inteira não corresponde a
 | RELATIONAL | `==`, `!=`, `>=`, `<=`, `>`, `<` | `!`, `=`, `=<` |
 | ASSIGNMENT | `=` | `==`, `!=`, `=<` |
 | DELIMITER | `(`, `)`, `{`, `}`, `;`, `,` | `.`, `_`, `()` |
-| KEYWORD | `farejar`, `refarejar`, `cheio`, `vazio` | `Farejar`, `farejares`, `_rato1` |
+| KEYWORD | `farejar`, `refarejar`, `cheio`, `vazio`, `vasculhar` | `Farejar`, `farejares`, `_rato1` |
 
 Embora `farejar` corresponda à expressão de IDENTIFIER, sua classificação final é KEYWORD devido à consulta ao conjunto K.
 
@@ -174,6 +178,8 @@ Os resultados abaixo seguem as regras da especificação original.
 | `x!=y` | IDENTIFIER `x`, RELATIONAL_OPERATOR `!=` e IDENTIFIER `y` |
 | `@` | Erro léxico |
 | `cheio` | KEYWORD |
+| `vasculhar` | KEYWORD |
+| `dentro1` | IDENTIFIER (a palavra inteira não pertence a K) |
 
 Espaço, tabulação e quebra de linha são ignorados e funcionam como separadores. Não há comentários na especificação atual.
 

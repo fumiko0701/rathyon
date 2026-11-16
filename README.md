@@ -34,6 +34,10 @@
 | `guinchar`  | `print`     | Imprime na saída        |
 | `cheio`     | `true`      | Booleano verdadeiro     |
 | `vazio`     | `false`     | Booleano falso          |
+| `vasculhar` | `for`       | Laço sobre sequência    |
+| `dentro`    | `in`        | Usado com o `for`       |
+| `trilha`    | `range`     | Sequência de números    |
+| `cavar`     | `def`       | Define uma função       |
 
 ### Operadores
 
