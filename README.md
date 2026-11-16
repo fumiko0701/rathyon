@@ -61,49 +61,39 @@
 ### Requisitos
 
 - Windows 10 ou superior
-- [Python 3.10+](https://www.python.org/downloads/) instalado (o instalador compila o interpretador)
-- Conexão com a internet (download do PyInstaller)
+- Para usar o instalador, não é necessário instalar Python.
 
 ### Opção 1 — Instalador gráfico (recomendado)
 
-1. Execute `rathyon_setup/RaSetup_v1-3-0.exe`.
-2. Escolha o diretório de instalação (padrão: `%LOCALAPPDATA%\Programs\Rathyon`).
-3. Marque as opções desejadas:
-   - **Adicionar ao PATH** do Windows
-   - **Associar arquivos `.ra`** à Rathyon (duplo clique executa e exibe o ícone)
-4. Clique em instalar e aguarde as 7 etapas:
-   1. Ambiente Python (`.venv`)
-   2. Dependências
-   3. Localização do arquivo principal
-   4. Compilação com PyInstaller
-   5. Cópia do executável e ícone
-   6. Configuração do PATH
-   7. Associação `.ra`
-5. Reabra o terminal e valide:
+1. Abra a [versão mais recente](https://github.com/fumiko0701/rathyon/releases/latest) e baixe `rathyonsetup.exe` em **Assets**.
+2. Execute o arquivo e siga o assistente. Ele configura o PATH e associa arquivos `.ra` ao Rathyon.
+3. No Bloco de Notas, escreva `guinchar("Ola, mundo!")` e salve como `meu_programa.ra` (tipo **Todos os arquivos**).
+4. Abra a pasta do arquivo no Explorador de Arquivos, digite `powershell` na barra de endereço e pressione Enter. Execute:
 
-```bash
-rathyon --version
+```powershell
+rathyon meu_programa.ra
 ```
+
+O terminal deve mostrar `Ola, mundo!`.
 
 ### Opção 2 — Executar a partir do código-fonte
 
+Com Python 3.10 ou superior instalado, execute na raiz do projeto:
+
 ```bash
-python rathyon.py principal.ra
+python rathyon.py teste.ra
 ```
 
 ### Opção 3 — Build via `config/build.py` (Desenvolvedores)
 
-Para compilar o interpretador manualmente (sem usar o instalador gráfico), execute na raiz do projeto:
+Para gerar o executável, abra o PowerShell na raiz do projeto e execute:
 
-```bash
+```powershell
+python -m pip install -r requirements.txt
 python config/build.py
 ```
 
-O script faz tudo sozinho:
-
-1. Cria `requirements.txt` na raiz (se ainda não existir).
-2. Instala as dependências do `.txt` (se faltar alguma).
-3. Gera o executável em `dist/rathyon.exe` com o ícone `assets/rathyon.ico` e o `config/palavras_reservadas.json` embutidos.
+No Windows, o executável será criado em `dist/rathyon.exe`. Para executá-lo da raiz do projeto, use `.\dist\rathyon.exe teste.ra`.
 
 #### Configurando o PATH (apenas Windows)
 
@@ -119,11 +109,11 @@ Para poder rodar `rathyon arquivo.ra` de qualquer pasta no seu terminal (sem pre
 ### Uso da CLI
 
 ```bash
-rathyon <arquivo.ra>     # executa um programa
-rathyon -h, --help       # ajuda
-rathyon -v, --version    # versão (alias: --v)
-rathyon --info           # informações da instalação
+python rathyon.py teste.ra   # executa pelo código-fonte
+rathyon teste.ra             # executa o .exe se dist estiver no PATH
 ```
+
+As opções `--help`, `--version` e `--info` não estão disponíveis nesta versão.
 
 ---
 
