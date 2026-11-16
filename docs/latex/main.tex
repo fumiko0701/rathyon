@@ -13,6 +13,9 @@
 \usetikzlibrary{automata, positioning, arrows.meta}
 \usepackage{float}
 \usepackage{booktabs}
+\usepackage{hyperref}
+\input{glyphtounicode}
+\pdfgentounicode=1
 
 %margens 
 \geometry{
@@ -23,7 +26,7 @@
 }
 
 \begin{document}
-
+\hypersetup{pageanchor=false}
 %capa
 \begin{titlepage}
 \centering
@@ -47,10 +50,12 @@ Pedro Artur Rolemberg Ferreira Nogueira - 01705061\\
 {\large 2026}
 
 \end{titlepage}
-
+\hypersetup{pageanchor=true}
+\pagenumbering{roman}
 %sumário
 \tableofcontents
-\newpage
+\clearpage
+\pagenumbering{arabic}
 
 
 \section{Introdução}
@@ -59,37 +64,42 @@ O desenvolvimento de uma mini-linguagem de programação envolve a definição d
 
 A proposta consiste em estabelecer uma linguagem temática na qual os elementos utilizados na construção dos comandos estejam relacionados a situações e comportamentos desses animais. Dessa maneira, conceitos como eventos e ações servem como referência para a organização das instruções, proporcionando uma identidade própria à linguagem e uma abordagem diferenciada para a aplicação dos conceitos de linguagens formais.
 
-No âmbito técnico, o projeto concentra-se no desenvolvimento de um analisador léxico (Scanner), responsável por percorrer o código-fonte e identificar os elementos que constituem a mini-linguagem, classificando-os de acordo com categorias previamente definidas, denominadas tokens. Esse processo permite reconhecer palavras reservadas, identificadores, operadores e demais componentes léxicos, conforme as regras estabelecidas para a linguagem.
+No âmbito técnico, o relatório apresenta uma proposta teórica de analisador léxico (Scanner), que percorreria o código-fonte e classificaria seus elementos em categorias denominadas tokens. A proposta considera palavras reservadas, identificadores, operadores e outros componentes léxicos.
 
-Dessa forma, o trabalho busca aplicar conhecimentos relacionados às linguagens formais, expressões regulares e autômatos finitos na construção de um analisador léxico funcional, demonstrando como os fundamentos teóricos da computação podem ser utilizados na definição e no reconhecimento dos elementos de uma linguagem de programação própria.
+O programa substitui palavras reservadas com \texttt{re.sub} e executa o código traduzido com \texttt{exec} do Python. O relatório aborda linguagens formais, expressões regulares e autômatos como parte da proposta teórica.
 
 \section{Objetivos}
 
-Desenvolver e documentar a especificaç~´ao de um analisador léxico (Scanner) para uma linguagem de programação temática, utilizando os conceitos de linguagens formais, expressões regulares e autômatos finitos determinísticos, com a finalidade de reconhecer e classificar os elementos léxicos presentes no código-fonte. 
+Desenvolver e documentar a especificação de um analisador léxico (Scanner) para uma linguagem de programação temática, utilizando linguagens formais, expressões regulares e autômatos finitos determinísticos para reconhecer e classificar os elementos léxicos.
 
 \subsection{Objetivo Geral}
 \begin{itemize}
 
-    \item Definir o alfabeto e as categorias de tokens de linguagens; 
-    \item Estabelecer expressões regulares parqa representar os padões léxicos; 
-    \item Modelar autômatos finitos determinísticos para o reconhecimento dee identificadores, números e opradores; 
+    \item Definir o alfabeto e as categorias de tokens da linguagem;
+    \item Estabelecer expressões regulares para representar os padrões léxicos;
+    \item Modelar autômatos finitos determinísticos para o reconhecimento de identificadores, números e operadores;
     \item Descrever o processo de identificação e classificação dos lexemas; 
-    \item Aplicar a estratégiia de maior casamento (\textit{maximal much}) durante o reconhecimento dos tokens; 
-    \item Expecificar mecanismos para identificação e tratamento de erros léxicos; 
-    \item Documentar e analisar os testes realizados pelo Scanner.
+    \item Aplicar a estratégia de maior casamento (\textit{maximal munch}) durante o reconhecimento dos tokens;
+    \item Especificar mecanismos para identificação e tratamento de erros léxicos;
+    \item Documentar as simulações da proposta de Scanner.
 
 \end{itemize}
 
     
 \subsection{Objetivos Específicos}
+\begin{itemize}
+\item Definir as categorias de tokens da linguagem.
+\item Representar os padrões com expressões regulares e autômatos.
+\item Descrever o tratamento de erros léxicos.
+\end{itemize}
 
 \section{Fundamentação Teórica}
 \subsection{Compiladores e Análise Léxica}
-Um copilador é um programa responsável por traduzir um código escrito em uma lingujagem de programação para outra representação, geralmente uma linguagem de máquina ou uma forma intermediária. Esse processo é dividido em etapas, que analisam diferentes aspectos do código-fonte. 
+Um compilador é um programa responsável por traduzir um código escrito em uma linguagem de programação para outra representação, geralmente uma linguagem de máquina ou uma forma intermediária. Esse processo é dividido em etapas, que analisam diferentes aspectos do código-fonte.
 
-A análise léxica é uma das primeiras etapas desse processo. Sua responsabilidade é percorrer o código fonte, identificar sequências de caracteres que foram unidade significativas e classificá-las em categorias denominadas tokens. 
+A análise léxica é uma das primeiras etapas desse processo. Sua responsabilidade é percorrer o código fonte, identificar sequências de caracteres que formam unidades significativas e classificá-las em categorias denominadas tokens.
 
-O componente responsável por essa atividade é chamado de analisador léxico ou scanner. Além de reconhecere os elementos válidos da linguagem, ele também pode identificar caracteres inválidos e informar a ocorrência de erros léxicos. 
+O componente responsável por essa atividade é chamado de analisador léxico ou scanner. Além de reconhecer os elementos válidos da linguagem, ele também pode identificar caracteres inválidos e informar a ocorrência de erros léxicos.
 
 \subsection{Tokens e Lexemas}
 
@@ -101,11 +111,11 @@ Por exemplo, considerando a instrução
     roer queijo = 18;
 \end{lstlisting}
 
-O Scanner deverá reconhecer os lexemas \texttt{roer}, \texttt{queijo}, \texttt{=}, \texttt{10} e \texttt{;}, atribuindo a cada um sua respectiva categoria léxica. 
+Na proposta, a instrução abaixo seria dividida nos lexemas \texttt{roer}, \texttt{queijo}, \texttt{=}, \texttt{18} e \texttt{;}, cada um associado à sua categoria léxica.
 
 \subsection{Expressões Regulares}
 
-Expressões regulares são representações formais utilizadas para descrever padrões de cadeias de caracteres. Elas permitem definir quais sequências pertencfem a determinadas linguagenbs regulares. 
+Expressões regulares são representações formais utilizadas para descrever padrões de cadeias de caracteres. Elas permitem definir quais sequências pertencem a determinadas linguagens regulares.
 
 No desenvolvimento do Scanner, as expressões regulares são utilizadas para especificar os padrões de reconhecimento dos tokens, como identificadores, números inteiros, números decimais e operadores. 
 
@@ -114,49 +124,47 @@ No desenvolvimento do Scanner, as expressões regulares são utilizadas para esp
 Autômatos finitos são modelos matemáticos utilizados para reconhecer linguagens regulares. Um autômato finito determinístico é definido por um conjunto de estados, um alfabeto, uma função de transição, um estado inicial e um conjunto de estados finais. 
 
 \section{Metodologia}
-
+Foram reunidas as palavras e os símbolos previstos para a linguagem. Depois, foram definidos padrões para os tokens e representados alguns reconhecedores por meio de autômatos. Os exemplos apresentados são simulações da proposta.
 \section{Desenvolvimento do Scanner}
 \subsection{Especificação da Linguagem e Categorias de Tokens}
+A proposta considera palavras reservadas, identificadores, números inteiros e decimais, operadores e delimitadores.
+
+A lista completa e as decisões pendentes estão em \href{../markdown/SPECIFICATIONS.md}{SPECIFICATIONS.md}.
 \subsection{Modelagem Matemática e Expressões Regulares}
+Os padrões e as tabelas dos autômatos estão descritos em \href{../markdown/REGULAR_EXPRESSIONS.md}{expressões regulares} e \href{../markdown/AUTOMATA.md}{autômatos}.
+
+Um identificador segue o padrão \texttt{(L|\_)(L|D|\_)*}, em que L representa uma letra e D, um dígito.
 
 \subsection{Implementação e Funcionamento do Scanner}
 
-O Scanner realiza a leitura do código-fonte de maneira sequencial, analisando os caracteres e identificando os padrões correspondentes às categorias de tokens definidas na linguagem. 
-
-Durante esse processo, são utilizadas as transições dos autômatos para determinar se uma sequência de caracteres corresponde a um elemento válido. 
-
-Para o reconhecimento dos lexemas, é adotada a estratégia de maior casamento, conhecida como \textit{maximal munch}. Essa estratégia consiste em selecionar a maior sequência possível de caracteres que corresponda a um padrão válido, considernado o último estado de aceitação alcançado. 
-
-Os espaçoes em branco, tabulações e quebras de linha são tratados como separadores, não sendo retornados como tokens. 
-
-Após o reconhecimento, cada lexema é associado à sua respectiva categoria léxica, permitindo que as próximas etapas do processamento recebam uma sequência organizada de tokens. 
+O programa substitui palavras reservadas com \texttt{re.sub} e executa o código traduzido com \texttt{exec} do Python.
 
 \subsection{Tratamento de Erros Léxicos}
 
-O analisador léxico deve identificar caracteres e sequências que não correspondem aos padrões válidos da linguagem. Quando uma entrada inválida é encontrada, o Scanner deve registrar a ocorrência do erro, informando sua localização por meio da linha e da coluna correspondentes. 
-
-Entre as situações previstas estão: 
-\begin{itemize}
-    \item Presença de caracteres que não pertencem ao alfabeto definido; 
-    \item Utilização isolada do símbolo \texttt{!}, sem a formação do operador\texttt{!=};
-    \item Fomração de números decimais incompletos, como \texttt{5.}; 
-    \item Presença de letras ou sublinhados imediatamente após uma sequência numérica, como em \texttt{123abc};
-    \item   Ocorrência de múltiplos pontos em uma sequência numérica, como em \texttt{9.8.7}
-\end{itemize}
-
-Após identificar um erro, o Scanner deve continuar a análise do restante do código-fonte, evitando que uma ocorrência inválida interrompa completamente o processamento. 
+Os exemplos de erro nos documentos de apoio fazem parte das simulações da proposta teórica.
 
 \section{Diagramas dos Autômatos}
+As tabelas de transição e simulações dos modelos propostos estão em \href{../markdown/AUTOMATA.md}{AUTOMATA.md}.
 \subsection{AFD de Identificadores}
+O modelo e as simulações estão em \href{../markdown/AUTOMATA.md}{AUTOMATA.md}.
 \subsection{AFD de Números}
+O modelo e as simulações estão em \href{../markdown/AUTOMATA.md}{AUTOMATA.md}.
 \subsection{AFD de Operadores Relacionais e Atribuição}
+Os modelos e as simulações estão em \href{../markdown/AUTOMATA.md}{AUTOMATA.md}.
 \subsection{AFDs de Operadores Aritméticos e Delimitadores}
+Os modelos e as simulações estão em \href{../markdown/AUTOMATA.md}{AUTOMATA.md}.
 
 \section{Testes e Resultados}
-
+Os casos disponíveis nos documentos de apoio são simulações da proposta teórica.
 \section{Conclusão}
-
+O relatório apresenta uma proposta teórica de análise léxica com tokens, expressões regulares e autômatos. O programa atual substitui palavras reservadas e executa o código traduzido com Python.
 \section{Referências}
+\begin{itemize}
+\item Projeto Rathyon. Código-fonte: \href{../../rathyon.py}{rathyon.py} e \href{../../config/palavras_reservadas.json}{JSON de palavras reservadas}.
+\item Projeto Rathyon. Especificação léxica: \href{../markdown/SPECIFICATIONS.md}{SPECIFICATIONS.md}.
+\item Projeto Rathyon. Autômatos e expressões regulares: \href{../markdown/AUTOMATA.md}{autômatos} e \href{../markdown/REGULAR_EXPRESSIONS.md}{expressões regulares}.
+\item Projeto Rathyon. Gramática: \href{../markdown/grammar.md}{grammar.md}.
+\end{itemize}
 
 
 \end{document}
