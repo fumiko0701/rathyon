@@ -9,19 +9,19 @@ import os
 import re
 import json
 
-# --- NOVO: Função para o PyInstaller achar a pasta certa ---
+# função para o PyInstaller achar a pasta certa ---
 def obter_diretorio_base():
     """Retorna a pasta do script original ou a pasta temporária do PyInstaller."""
     if getattr(sys, 'frozen', False):
-        # Se estiver rodando como .exe (PyInstaller)
+        #se estiver rodando como .exe (PyInstaller)
         return sys._MEIPASS
-    # Se estiver rodando como .py normal
+    #se estiver rodando como .py normal
     return os.path.dirname(os.path.abspath(__file__))
 
 #le o .json do colega pra trocar os termos reservados
 def carregar_traducao():
     """Lê config/palavras_reservadas.json e devolve {rathyon: python}."""
-    # --- MUDANÇA MÍNIMA: Usa a função auxiliar em vez do os.path.dirname direto ---
+    #MUDANÇA MÍNIMA: Usa a função auxiliar em vez do os.path.dirname direto
     caminho = os.path.join(
         obter_diretorio_base(), 
         "config", "palavras_reservadas.json"
@@ -39,7 +39,7 @@ def traduzir(codigo, mapa):
 
 def main():
     if len(sys.argv) != 2:
-        print("Uso: rathyon <arquivo.ra> (ou: python rathyon.py <arquivo.ra>)")
+        print("Uso: rathyon <arquivo.ra>")
         sys.exit(1)
 
     caminho = sys.argv[1]

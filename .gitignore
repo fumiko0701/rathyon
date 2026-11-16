@@ -9,6 +9,8 @@ __pycache__/
 
 #extensão auxiliar
 vscode-rathyon/
+rathyonsetup.py
+rathyonsetup.spec
 #ambiente virtual
 .env/
 .venv/

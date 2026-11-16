@@ -87,44 +87,21 @@ rathyon --version
 python rathyon.py principal.ra
 ```
 
-### Opção 3 — Build manual via terminal (Desenvolvedores)
+### Opção 3 — Build via `config/build.py` (Desenvolvedores)
 
-Se você é um desenvolvedor e precisa compilar o interpretador manualmente para testar alterações no código ou gerar o `.exe` sem usar o instalador gráfico, siga os passos abaixo:
-
-#### 1. Instale as dependências
-
-Certifique-se de ter o Python 3.10+ instalado (com a opção **"Add python.exe to PATH"** marcada na instalação).
-No terminal, dentro da pasta raiz do projeto, instale o PyInstaller:
+Para compilar o interpretador manualmente (sem usar o instalador gráfico), execute na raiz do projeto:
 
 ```bash
-python -m pip install pyinstaller
+python config/build.py
 ```
 
-#### 2. Compile o interpretador (Rathyon)
+O script faz tudo sozinho:
 
-Como o projeto utiliza um arquivo de configuração externo (`config/palavras_reservadas.json`), é **obrigatório** usar a flag `--add-data` para embutir esse arquivo dentro do executável. Caso contrário, o `.exe` gerado não conseguirá traduzir as palavras-chave.
+1. Cria `requirements.txt` na raiz (se ainda não existir).
+2. Instala as dependências do `.txt` (se faltar alguma).
+3. Gera o executável em `dist/rathyon.exe` com o ícone `assets/rathyon.ico` e o `config/palavras_reservadas.json` embutidos.
 
-Execute o comando abaixo na raiz do projeto:
-
-**No Windows (CMD/PowerShell):**
-
-```bash
-python -m PyInstaller --onefile --add-data "config/palavras_reservadas.json;config" rathyon.py
-```
-
-**No Linux / macOS:**
-
-```bash
-python -m PyInstaller --onefile --add-data "config/palavras_reservadas.json:config" rathyon.py
-```
-
-> **Nota:** a única diferença entre os sistemas é o separador do `--add-data`: `;` no Windows e `:` no Linux/macOS.
-
-#### 3. Localizando o executável
-
-Após o término do processo, o PyInstaller criará uma pasta chamada `dist`. O seu executável final estará em `dist/rathyon.exe` (ou `dist/rathyon` no Linux/macOS).
-
-#### 4. Configurando o PATH (apenas Windows)
+#### Configurando o PATH (apenas Windows)
 
 Para poder rodar `rathyon arquivo.ra` de qualquer pasta no seu terminal (sem precisar digitar o caminho completo do `.exe`):
 
@@ -152,6 +129,12 @@ rathyon --info           # informações da instalação
 RATHYON/
 ├── rathyon.py                  # Interpretador (lexer, parser, executor, CLI)
 ├── principal.ra                # Programa de exemplo
+├── requirements.txt            # Gerado pelo build (dependências do pip)
+├── config/
+│   ├── palavras_reservadas.json
+│   └── build.py                # Script de build (gera dist/rathyon.exe)
+├── assets/
+│   └── rathyon.ico             # Ícone do executável
 └── rathyon_setup/
     ├── rathyon_setup.py        # Instalador gráfico (Tkinter)
     ├── rathyon_setup.spec      # Configuração PyInstaller do instalador
