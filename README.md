@@ -87,6 +87,54 @@ rathyon --version
 python rathyon.py principal.ra
 ```
 
+### Opção 3 — Build manual via terminal (Desenvolvedores)
+
+Se você é um desenvolvedor e precisa compilar o interpretador manualmente para testar alterações no código ou gerar o `.exe` sem usar o instalador gráfico, siga os passos abaixo:
+
+#### 1. Instale as dependências
+
+Certifique-se de ter o Python 3.10+ instalado (com a opção **"Add python.exe to PATH"** marcada na instalação).
+No terminal, dentro da pasta raiz do projeto, instale o PyInstaller:
+
+```bash
+python -m pip install pyinstaller
+```
+
+#### 2. Compile o interpretador (Rathyon)
+
+Como o projeto utiliza um arquivo de configuração externo (`config/palavras_reservadas.json`), é **obrigatório** usar a flag `--add-data` para embutir esse arquivo dentro do executável. Caso contrário, o `.exe` gerado não conseguirá traduzir as palavras-chave.
+
+Execute o comando abaixo na raiz do projeto:
+
+**No Windows (CMD/PowerShell):**
+
+```bash
+python -m PyInstaller --onefile --add-data "config/palavras_reservadas.json;config" rathyon.py
+```
+
+**No Linux / macOS:**
+
+```bash
+python -m PyInstaller --onefile --add-data "config/palavras_reservadas.json:config" rathyon.py
+```
+
+> **Nota:** a única diferença entre os sistemas é o separador do `--add-data`: `;` no Windows e `:` no Linux/macOS.
+
+#### 3. Localizando o executável
+
+Após o término do processo, o PyInstaller criará uma pasta chamada `dist`. O seu executável final estará em `dist/rathyon.exe` (ou `dist/rathyon` no Linux/macOS).
+
+#### 4. Configurando o PATH (apenas Windows)
+
+Para poder rodar `rathyon arquivo.ra` de qualquer pasta no seu terminal (sem precisar digitar o caminho completo do `.exe`):
+
+1. Copie o caminho completo da pasta `dist` (ex: `C:\Users\SeuUsuario\Documents\rathyon\dist`).
+2. Pesquise no menu Iniciar por **"Editar as variáveis de ambiente do sistema"**.
+3. Clique em **Variáveis de Ambiente** → encontre a variável **Path** e clique em **Editar**.
+4. Clique em **Novo**, cole o caminho copiado e dê **OK** em tudo.
+
+> **Importante:** feche e abra um novo terminal para que as alterações tenham efeito.
+
 ### Uso da CLI
 
 ```bash
@@ -100,7 +148,7 @@ rathyon --info           # informações da instalação
 
 ## Estrutura do projeto
 
-```
+```text
 RATHYON/
 ├── rathyon.py                  # Interpretador (lexer, parser, executor, CLI)
 ├── principal.ra                # Programa de exemplo
@@ -124,7 +172,7 @@ RATHYON/
 
 ### Arquitetura do interpretador
 
-```
+```text
 arquivo .ra → Lexer (tokens) → Parser (AST) → Executor
 ```
 
