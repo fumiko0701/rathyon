@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 Rathyon
-Versão 0.0.4 (Suporte a PyInstaller)
-Como usar: python rathyon.py <arquivo.ra> ou rathyon <arquivo.ra> (após compilar)
+Versão 0.1.1
+Como usar: python rathyon.py <arquivo.ra> ou rathyon <arquivo.ra>
 """
 import sys
 import os

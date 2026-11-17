@@ -1,0 +1,30 @@
+{
+    "name": "rathyon",
+    "displayName": "Rathyon",
+    "description": "Suporte de linguagem para Rathyon (.ra)",
+    "version": "0.0.2",
+    "publisher": "fumiko0701",
+    "engines": {
+        "vscode": "^1.74.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "rathyon",
+                "aliases": ["Rathyon", "rathyon"],
+                "extensions": [".ra"],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "rathyon",
+                "scopeName": "source.ra",
+                "path": "./syntaxes/rathyon.tmLanguage.json"
+            }
+        ]
+    }
+}

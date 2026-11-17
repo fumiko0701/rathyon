@@ -1,6 +1,6 @@
 #teste.ra
 nome = "mundo"
-for i in range(3):
+vasculhar i in range(3):
     guinchar(f"Olá, {nome}! {i}")
 
 farejar 2 > 1:

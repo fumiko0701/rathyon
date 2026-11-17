@@ -1,0 +1,51 @@
+{
+    "name": "Rathyon",
+    "patterns": [
+        { "include": "#keywords" },
+        { "include": "#strings" },
+        { "include": "#numbers" },
+        { "include": "#comments" }
+    ],
+    "repository": {
+        "keywords": {
+            "patterns": [
+                {
+                    "name": "keyword.control.rathyon",
+                    "match": "\\b(farejar|refarejar|fujir|roer|escapar|voltar)\\b"
+                },
+                {
+                    "name": "keyword.other.rathyon",
+                    "match": "\\b(guinchar|queijo|migalha|cheio|vazio|ouvir|sinalizar)\\b"
+                }
+            ]
+        },
+        "strings": {
+            "name": "string.quoted.double.rathyon",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [
+                {
+                    "name": "constant.character.escape.rathyon",
+                    "match": "\\\\."
+                }
+            ]
+        },
+        "numbers": {
+            "patterns": [
+                {
+                    "name": "constant.numeric.rathyon",
+                    "match": "\\b\\d+(\\.\\d+)?\\b"
+                }
+            ]
+        },
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line.double-slash.rathyon",
+                    "match": "//.*$"
+                }
+            ]
+        }
+    },
+    "scopeName": "source.ra"
+}
