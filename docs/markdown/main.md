@@ -32,9 +32,9 @@ O desenvolvimento de uma mini-linguagem de programação envolve a definição d
 
 A proposta usa elementos temáticos relacionados a esses animais como referência para organizar eventos e ações, dando identidade própria à linguagem e uma abordagem diferenciada para aplicar conceitos de linguagens formais.
 
-O projeto concentra-se no desenvolvimento de um analisador léxico (Scanner), responsável por percorrer o código-fonte, identificar seus elementos e classificá-los em categorias chamadas tokens. O processo reconhece palavras reservadas, identificadores, operadores e outros componentes léxicos conforme as regras definidas para a linguagem.
+O relatório apresenta uma proposta teórica de analisador léxico (Scanner), que percorreria o código-fonte e classificaria seus elementos em categorias chamadas tokens. A proposta considera palavras reservadas, identificadores, operadores e outros componentes léxicos.
 
-O trabalho aplica conhecimentos de linguagens formais, expressões regulares e autômatos finitos na construção de um analisador léxico, demonstrando como fundamentos teóricos da computação podem ser usados na definição e no reconhecimento dos elementos de uma linguagem própria.
+O programa substitui palavras reservadas com `re.sub` e executa o código traduzido com `exec` do Python. O relatório aborda linguagens formais, expressões regulares e autômatos como parte da proposta teórica.
 
 ## 2. Objetivos
 
@@ -48,11 +48,13 @@ Desenvolver e documentar a especificação de um analisador léxico (Scanner) pa
 - Descrever a identificação e a classificação dos lexemas.
 - Aplicar a estratégia de maior casamento (*maximal munch*) durante o reconhecimento dos tokens.
 - Especificar mecanismos para identificar e tratar erros léxicos.
-- Documentar e analisar os testes realizados pelo Scanner.
+- Documentar as simulações da proposta de Scanner.
 
 ### 2.2 Objetivos específicos
 
-Seção reservada para detalhar os objetivos específicos.
+- Definir as categorias de tokens da linguagem.
+- Representar seus padrões com expressões regulares e autômatos.
+- Descrever o tratamento de erros léxicos.
 
 ## 3. Fundamentação teórica
 
@@ -64,7 +66,7 @@ A análise léxica é uma das primeiras etapas. Ela percorre o código-fonte, id
 
 ### 3.2 Tokens e lexemas
 
-Token é a classificação atribuída a uma unidade reconhecida durante a análise léxica. Lexema é a sequência de caracteres do código-fonte que representa esse token. Por exemplo, na instrução abaixo, o Scanner deve reconhecer `roer`, `queijo`, `=`, `18` e `;` e associá-los às respectivas categorias léxicas.
+Token é a classificação atribuída a uma unidade reconhecida durante a análise léxica. Lexema é a sequência de caracteres do código-fonte que representa esse token. Na proposta, a instrução abaixo seria dividida nos lexemas `roer`, `queijo`, `=`, `18` e `;`, cada um associado à sua categoria léxica.
 
 ```text
 roer queijo = 18;
@@ -80,64 +82,56 @@ Autômatos finitos são modelos matemáticos usados para reconhecer linguagens r
 
 ## 4. Metodologia
 
-Seção reservada para descrever a metodologia do trabalho.
+Foram reunidas as palavras e os símbolos previstos para a linguagem. Depois, foram definidos padrões para os tokens e representados alguns reconhecedores por meio de autômatos. Os exemplos apresentados são simulações da proposta.
 
 ## 5. Desenvolvimento do Scanner
 
 ### 5.1 Especificação da linguagem e categorias de tokens
 
-Seção reservada para apresentar a especificação da linguagem e as categorias de tokens.
+A proposta considera palavras reservadas, identificadores, números inteiros e decimais, operadores e delimitadores. A lista completa e as decisões ainda pendentes estão em [SPECIFICATIONS.md](SPECIFICATIONS.md).
 
 ### 5.2 Modelagem matemática e expressões regulares
 
-Seção reservada para apresentar a modelagem matemática e as expressões regulares.
+Os padrões e as tabelas dos autômatos estão descritos em [REGULAR_EXPRESSIONS.md](REGULAR_EXPRESSIONS.md) e [AUTOMATA.md](AUTOMATA.md). Por exemplo, um identificador segue o padrão `(L|_)(L|D|_)*`, em que `L` representa uma letra e `D`, um dígito.
 
 ### 5.3 Implementação e funcionamento do Scanner
 
-O Scanner percorre o código-fonte sequencialmente, analisando os caracteres e identificando padrões correspondentes às categorias de tokens definidas para a linguagem. O projeto descreve o uso das transições dos autômatos para determinar se uma sequência corresponde a um elemento válido.
-
-Para reconhecer lexemas, é adotada a estratégia de maior casamento (*maximal munch*): selecionar a maior sequência possível de caracteres que corresponda a um padrão válido, considerando o último estado de aceitação alcançado.
-
-Espaços em branco, tabulações e quebras de linha são tratados como separadores e não são retornados como tokens. Depois do reconhecimento, cada lexema é associado à sua categoria léxica, formando uma sequência organizada de tokens para as próximas etapas do processamento.
+O programa substitui palavras reservadas com `re.sub` e executa o código traduzido com `exec` do Python.
 
 ### 5.4 Tratamento de erros léxicos
 
-O analisador léxico deve identificar caracteres e sequências que não correspondam aos padrões válidos da linguagem. Quando encontra uma entrada inválida, deve registrar o erro e informar sua localização por linha e coluna. As situações previstas no material incluem:
-
-- Caracteres que não pertencem ao alfabeto definido.
-- O símbolo `!` isolado, sem formar o operador `!=`.
-- Números decimais incompletos, como `5.`.
-- Letras ou sublinhados imediatamente após uma sequência numérica, como em `123abc`.
-- Mais de um ponto em uma sequência numérica, como em `9.8.7`.
-
-Após identificar um erro, o Scanner deve continuar a análise do restante do código-fonte para que uma ocorrência inválida não interrompa completamente o processamento.
+Os exemplos de erro nos documentos de apoio fazem parte das simulações da proposta teórica.
 
 ## 6. Diagramas dos autômatos
 
 ### 6.1 AFD de identificadores
 
-Seção reservada ao diagrama do AFD de identificadores.
+O modelo e as simulações estão em [AUTOMATA.md](AUTOMATA.md).
 
 ### 6.2 AFD de números
 
-Seção reservada ao diagrama do AFD de números.
+O modelo e as simulações estão em [AUTOMATA.md](AUTOMATA.md).
 
 ### 6.3 AFD de operadores relacionais e atribuição
 
-Seção reservada aos diagramas dos AFDs de operadores relacionais e de atribuição.
+Os modelos e as simulações estão em [AUTOMATA.md](AUTOMATA.md).
 
 ### 6.4 AFDs de operadores aritméticos e delimitadores
 
-Seção reservada aos diagramas dos AFDs de operadores aritméticos e delimitadores.
+Os modelos e as simulações estão em [AUTOMATA.md](AUTOMATA.md).
 
 ## 7. Testes e resultados
 
-Seção reservada para documentar os testes e seus resultados.
+Os casos disponíveis nos documentos de apoio são simulações da proposta teórica.
 
 ## 8. Conclusão
 
-Seção reservada para a conclusão do trabalho.
+O relatório apresenta uma proposta teórica de análise léxica com tokens, expressões regulares e autômatos. O programa atual substitui palavras reservadas e executa o código traduzido com Python.
 
 ## 9. Referências
 
-Seção reservada às referências utilizadas no trabalho.
+- Projeto Rathyon. Código-fonte: `rathyon.py` e `config/palavras_reservadas.json`.
+- Projeto Rathyon. [Especificação léxica](SPECIFICATIONS.md).
+- Projeto Rathyon. [Autômatos](AUTOMATA.md).
+- Projeto Rathyon. [Expressões regulares](REGULAR_EXPRESSIONS.md).
+- Projeto Rathyon. [Gramática](grammar.md).

@@ -1,6 +1,6 @@
 # Especificação Léxica — Linguagem do Rato
 
-- **Versão:** 0.2-rascunho — T01.
+- **Versão:** 0.3-rascunho — T01.
 - **Data:** 15/11/2026.
 - **Etapa:** em criação, antes do beta.
 - **Status:** aguardando validação do grupo.
@@ -40,7 +40,7 @@ Um **token** é uma parte reconhecida do código, como um nome, número ou opera
 
 ## 4. Palavras reservadas — conjunto K
 
-As 13 palavras abaixo são `KEYWORD` na proposta atual. A categoria de `cheio` e `vazio` ainda será confirmada.
+As 17 palavras abaixo são `KEYWORD` na proposta atual. As 13 primeiras vêm do PDF; as 4 últimas (`vasculhar`, `dentro`, `trilha`, `cavar`) foram acrescentadas a partir do `teste.ra` e dependem da decisão D02. A categoria de `cheio` e `vazio` ainda será confirmada (D01).
 
 | Palavra | Referência |
 | --- | --- |
@@ -57,6 +57,10 @@ As 13 palavras abaixo são `KEYWORD` na proposta atual. A categoria de `cheio` e
 | `sinalizar` | `emit` — disparar evento |
 | `cheio` | `true` |
 | `vazio` | `false` |
+| `vasculhar` | `for` — D02 |
+| `dentro` | `in` — D02 |
+| `trilha` | `range` — D02 |
+| `cavar` | `def` — D02 |
 
 A grafia `fujir` foi mantida conforme o PDF. As referências explicam os nomes; não definem como os comandos serão executados.
 
@@ -94,3 +98,9 @@ Todas aguardam resposta do grupo. Ao decidir, registrar em `decisions.md`: data,
 ### D01 — cheio e vazio
 
 - **Alternativas:** manter `KEYWORD` ou criar `BOOLEAN`.
+
+### D02 — palavras acrescentadas pelo teste.ra
+
+- **Proposta:** incluir `vasculhar` (`for`), `dentro` (`in`), `trilha` (`range`) e `cavar` (`def`) em K, como `KEYWORD`, com K passando de 13 para 17 palavras.
+- **Alternativas:** manter só as 13 palavras (e então `for`, `in`, `range` e `def` não fazem parte da linguagem) ou escolher outros nomes.
+- **Efeito:** nenhum AFD muda. O conjunto K e os testes de palavras reservadas passam a incluir as quatro palavras.
