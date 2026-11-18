@@ -10,7 +10,13 @@ import re
 import json
 import code
 
-# função para o PyInstaller achar a pasta certa ---
+#importando
+#from src.lexer import Scanner, Cursor
+#from src.tokens import Token, Categoria, ErroLexico
+#quando a /src ficar pronta, pode importar
+
+
+#função para o PyInstaller achar a pasta certa ---
 def obter_diretorio_base():
     """Retorna a pasta do script original ou a pasta temporária do PyInstaller."""
     if getattr(sys, 'frozen', False):
