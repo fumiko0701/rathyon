@@ -1,0 +1,12 @@
+queijo idade = 20;
+queijo limite = 18;
+
+farejar idade > limite {
+    guinchar(idade);
+}
+
+cavar somar(a, b) {
+    voltar a + b;
+}
+
+queijo resultado = somar(10, 20);

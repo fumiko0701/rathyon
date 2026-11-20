@@ -1,4 +1,4 @@
-﻿"""lexer.py — Scanner da Linguagem do Rato (tarefas 65-66).
+"""lexer.py — Scanner da Linguagem do Rato (tarefas 65-66).
 
 Laço principal: pula separadores, tenta reconhecer o próximo token, mantém o
 último estado final válido (maior casamento / maximal munch) e emite o token.
@@ -9,8 +9,12 @@ from __future__ import annotations
 
 from typing import Iterable, List, Tuple
 
-from .automata import Cursor, K_PADRAO, SEPARADORES, reconhecer_qualquer
-from .tokens import Categoria, ErroLexico, Token
+try:  # Import como pacote (rathyon.lexer) ou módulo na raiz do projeto.
+    from .automata import Cursor, K_PADRAO, SEPARADORES, reconhecer_qualquer
+    from .tokens import Categoria, ErroLexico, Token
+except ImportError:  # Compatibilidade com os testes que importam src.* na raiz.
+    from automata import Cursor, K_PADRAO, SEPARADORES, reconhecer_qualquer
+    from tokens import Categoria, ErroLexico, Token
 
 
 class Scanner:

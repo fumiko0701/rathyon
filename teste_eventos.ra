@@ -1,0 +1,10 @@
+ouvir jogador_entrou(nome) {
+    guinchar(nome);
+}
+
+ouvir jogador_saiu(nome) {
+    guinchar(nome);
+}
+
+sinalizar jogador_entrou(nome);
+sinalizar jogador_saiu(nome);

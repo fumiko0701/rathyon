@@ -1,0 +1,13 @@
+queijo contador = 0;
+
+roer contador < 10 {
+    contador = contador + 1;
+
+    farejar contador == 5 {
+        escapar;
+    }
+}
+
+vasculhar item dentro itens {
+    guinchar(item);
+}

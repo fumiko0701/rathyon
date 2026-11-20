@@ -1,0 +1,40 @@
+
+queijo idade = 20;
+migalha limite = 18;
+queijo resultado = 10 + 5 * 2;
+queijo ativo = cheio;
+
+farejar idade > limite {
+    guinchar(idade);
+} refarejar idade == limite {
+    guinchar(limite);
+} fujir {
+    guinchar(resultado);
+}
+
+roer idade > 0 {
+    idade = idade - 1;
+
+    farejar idade == 5 {
+        escapar;
+    }
+}
+
+vasculhar item dentro itens {
+    guinchar(item);
+}
+
+cavar somar(a, b) {
+    voltar a + b;
+}
+
+queijo total = somar(10, 20);
+
+ouvir jogador_entrou(nome) {
+    guinchar(nome);
+}
+
+sinalizar jogador_entrou(total);
+
+farejar idade > 18 {
+    guinchar(idade);

@@ -1,4 +1,4 @@
-﻿"""automata.py — Cursor e simulação explícita dos AFDs (tarefas 63-64).
+"""automata.py — Cursor e simulação explícita dos AFDs (tarefas 63-64).
 
 Implementa o cursor sobre o texto-fonte e a simulação caractere a caractere
 dos AFDs aprovados (AUTOMATA.md). Não usa regex geral que oculte o autômato.
@@ -13,7 +13,10 @@ from __future__ import annotations
 
 from typing import Iterable, Optional
 
-from .tokens import Categoria, ErroLexico, Token
+try:  # Import como pacote (rathyon.automata) ou módulo na raiz do projeto.
+    from .tokens import Categoria, ErroLexico, Token
+except ImportError:  # Compatibilidade com os testes que importam src.* na raiz.
+    from tokens import Categoria, ErroLexico, Token
 
 # Separadores: não geram tokens, apenas avançam a posição do cursor (regra 8).
 SEPARADORES = {' ', '\t', '\n'}

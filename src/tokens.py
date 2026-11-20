@@ -1,27 +1,10 @@
-# src/tokens.py
-from enum import Enum, auto
-from dataclasses import dataclass
+"""Compatibilidade: os tokens oficiais ficam definidos em tokens.py na raiz.
 
-class Categoria(Enum):
-    KEYWORD = auto()
-    IDENTIFIER = auto()
-    INTEGER = auto()
-    FLOAT = auto()
-    ARITHMETIC_OPERATOR = auto()
-    RELATIONAL_OPERATOR = auto()
-    ASSIGNMENT = auto()
-    DELIMITER = auto()
+Este módulo mantém os imports antigos `src.tokens` sem duplicar Enum/dataclasses.
+"""
+try:
+    from ..tokens import Categoria, Token, ErroLexico
+except ImportError:
+    from tokens import Categoria, Token, ErroLexico
 
-@dataclass
-class Token:
-    categoria: Categoria
-    lexema: str
-    linha: int
-    coluna: int
-
-@dataclass
-class ErroLexico:
-    lexema: str
-    linha: int
-    coluna: int
-    mensagem: str
+__all__ = ["Categoria", "Token", "ErroLexico"]

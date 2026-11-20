@@ -1,0 +1,5 @@
+queijo idade = 20
+
+farejar idade > 18 {
+    guinchar(idade);
+}
