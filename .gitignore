@@ -26,6 +26,7 @@ dist/
 *.spec
 
 #utilidade local
+*.zip
 rathyon_setup/
 .vscode/
 .idea/
