@@ -4,7 +4,7 @@ title Rathyon - Instalar Extensao VS Code
 
 set "SRC=%~dp0"
 set "SRC=%SRC:~0,-1%"
-set "VER=0.0.2"
+set "VER=0.2.0"
 set "DEST=%USERPROFILE%\.vscode\extensions\fumiko0701.rathyon-%VER%"
 
 if not exist "%SRC%\package.json" (

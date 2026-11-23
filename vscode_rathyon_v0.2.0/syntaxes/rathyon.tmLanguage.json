@@ -1,0 +1,73 @@
+{
+    "name": "Rathyon",
+    "patterns": [
+        { "include": "#regions" },
+        { "include": "#keywords" },
+        { "include": "#strings" },
+        { "include": "#numbers" },
+        { "include": "#comments" }
+    ],
+    "repository": {
+        "regions": {
+            "patterns": [
+                {
+                    "name": "meta.region.rathyon",
+                    "begin": "^(\\s*)(#region)\\s+(\\w+)(.*)$",
+                    "beginCaptures": {
+                        "2": { "name": "keyword.control.region.rathyon" },
+                        "3": { "name": "entity.name.region.rathyon" }
+                    },
+                    "end": "^(\\s*)(#endregion)\\b",
+                    "endCaptures": {
+                        "2": { "name": "keyword.control.endregion.rathyon" }
+                    },
+                    "patterns": [
+                        { "include": "#regions" },
+                        { "include": "#keywords" },
+                        { "include": "#strings" },
+                        { "include": "#numbers" },
+                        { "include": "#comments" }
+                    ]
+                },
+                {
+                    "match": "^(\\s*)(#gotoregion)\\s+(\\w+)(.*)$",
+                    "captures": {
+                        "2": { "name": "keyword.control.gotoregion.rathyon" },
+                        "3": { "name": "entity.name.region.rathyon" }
+                    }
+                }
+            ]
+        },
+        "keywords": {
+            "patterns": [
+                {
+                    "name": "keyword.control.rathyon",
+                    "match": "\\b(farejar|refarejar|fujir|roer|escapar|voltar)\\b"
+                },
+                {
+                    "name": "keyword.other.rathyon",
+                    "match": "\\b(guinchar|queijo|migalha|cheio|vazio|ouvir|sinalizar|vasculhar|dentro|cavar|trilha)\\b"
+                }
+            ]
+        },
+        "strings": {
+            "name": "string.quoted.double.rathyon",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [
+                { "name": "constant.character.escape.rathyon", "match": "\\\\." }
+            ]
+        },
+        "numbers": {
+            "patterns": [
+                { "name": "constant.numeric.rathyon", "match": "\\b\\d+(\\.\\d+)?\\b" }
+            ]
+        },
+        "comments": {
+            "patterns": [
+                { "name": "comment.line.double-slash.rathyon", "match": "//.*$" }
+            ]
+        }
+    },
+    "scopeName": "source.ra"
+}

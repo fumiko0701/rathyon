@@ -1,14 +1,18 @@
 {
     "name": "rathyon",
     "displayName": "Rathyon",
-    "description": "Suporte de linguagem para Rathyon (.ra)",
-    "version": "0.0.2",
+    "description": "Suporte de linguagem para Rathyon (.ra) com regiões visualmente destacadas",
+    "version": "0.2.0",
     "publisher": "fumiko0701",
     "engines": {
         "vscode": "^1.74.0"
     },
     "categories": [
         "Programming Languages"
+    ],
+    "main": "./src/extension.js",
+    "activationEvents": [
+        "onLanguage:rathyon"
     ],
     "contributes": {
         "languages": [
@@ -25,6 +29,16 @@
                 "scopeName": "source.ra",
                 "path": "./syntaxes/rathyon.tmLanguage.json"
             }
-        ]
+        ],
+        "configuration": {
+            "title": "Rathyon",
+            "properties": {
+                "rathyon.regionHighlightEnabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Destacar regiões #region / #endregion (fundo suave, gutter e keywords coloridas)."
+                }
+            }
+        }
     }
 }

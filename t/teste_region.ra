@@ -1,0 +1,22 @@
+#region start;
+queijo contador = 0;
+#endregion
+
+#region step
+x = 1;
+
+#region minha_regiao
+x = x + 1;
+guinchar(x);
+#endregion
+
+x = 10;
+guinchar(x);
+#gotoregion minha_regiao
+
+guinchar(999);
+#endregion
+
+#region end
+guinchar(0);
+#endregion

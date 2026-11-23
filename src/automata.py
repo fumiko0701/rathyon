@@ -1,4 +1,4 @@
-"""automata.py — Cursor e simulação explícita dos AFDs (tarefas 63-64).
+"""src/automata.py — Cursor e simulação explícita dos AFDs (tarefas 63-64).
 
 Implementa o cursor sobre o texto-fonte e a simulação caractere a caractere
 dos AFDs aprovados (AUTOMATA.md). Não usa regex geral que oculte o autômato.
@@ -16,7 +16,7 @@ from typing import Iterable, Optional
 try:  # Import como pacote (rathyon.automata) ou módulo na raiz do projeto.
     from .tokens import Categoria, ErroLexico, Token
 except ImportError:  # Compatibilidade com os testes que importam src.* na raiz.
-    from tokens import Categoria, ErroLexico, Token
+    from src.tokens import Categoria, ErroLexico, Token
 
 # Separadores: não geram tokens, apenas avançam a posição do cursor (regra 8).
 SEPARADORES = {' ', '\t', '\n'}
@@ -34,6 +34,59 @@ def eh_digito(c: str) -> bool:
     """Dígito D = 0..9."""
     return '0' <= c <= '9'
 
+def reconhecer_diretiva(cursor: "Cursor"):
+    """Reconhece #region NOME, #endregion e #gotoregion NOME.
+
+    Emite tokens REGION_START / REGION_END / GOTO_REGION.
+    Qualquer outro '#' vira ErroLexico de um caractere.
+    """
+    inicio = cursor.salvar()
+    cursor.avancar()  # consome '#'
+    palavra = []
+    while not cursor.fim() and (eh_letra(cursor.peek()) or cursor.peek() == '_'):
+        palavra.append(cursor.avancar())
+    nome = "".join(palavra)
+
+    def _ler_identificador():
+        while not cursor.fim() and cursor.peek() in ' \t':
+            cursor.avancar()
+        buf = []
+        while not cursor.fim() and (eh_letra(cursor.peek()) or eh_digito(cursor.peek()) or cursor.peek() == '_'):
+            buf.append(cursor.avancar())
+        return "".join(buf)
+
+    def _pular_resto_da_linha():
+        while not cursor.fim() and cursor.peek() != '\n':
+            cursor.avancar()
+
+    if nome == "region":
+        reg = _ler_identificador()
+        if not reg:
+            cursor.restaurar(inicio)
+            primeiro = cursor.avancar()
+            return ErroLexico(primeiro, inicio[1], inicio[2],
+                              "'#region' sem nome de região")
+        _pular_resto_da_linha()
+        return Token(Categoria.REGION_START, reg, inicio[1], inicio[2])
+
+    if nome == "endregion":
+        _pular_resto_da_linha()
+        return Token(Categoria.REGION_END, "", inicio[1], inicio[2])
+
+    if nome == "gotoregion":
+        reg = _ler_identificador()
+        if not reg:
+            cursor.restaurar(inicio)
+            primeiro = cursor.avancar()
+            return ErroLexico(primeiro, inicio[1], inicio[2],
+                              "'#gotoregion' sem nome de região")
+        _pular_resto_da_linha()
+        return Token(Categoria.GOTO_REGION, reg, inicio[1], inicio[2])
+
+    cursor.restaurar(inicio)
+    primeiro = cursor.avancar()
+    return ErroLexico(primeiro, inicio[1], inicio[2],
+                      f"caractere fora do alfabeto: {primeiro!r}")
 
 def classe_simbolo(c: str) -> Optional[str]:
     """Retorna a coluna da tabela de transição para c, ou None se c ∉ Σ.
@@ -55,6 +108,8 @@ def classe_simbolo(c: str) -> Optional[str]:
         return c
     if c in '(){};,':
         return c
+    if c == '#':
+        return '#'
     return None
 
 
@@ -268,4 +323,6 @@ def reconhecer_qualquer(cursor: Cursor, palavras_reservadas: Iterable[str]):
         return reconhecer_delimitador(cursor)
     if c == '.':
         return reconhecer_numero(cursor)
+    if c == '#':
+        return reconhecer_diretiva(cursor)
     return None

@@ -1,0 +1,76 @@
+#region end
+guinchar(99);
+#endregion
+
+#region step
+guinchar(10);
+
+#region soma
+cavar somar(a, b) {
+    voltar a + b;
+}
+guinchar(somar(10, 20));
+#endregion
+
+#region contagem
+vasculhar i dentro trilha(3) {
+    guinchar(i);
+}
+#endregion
+
+#region laco
+queijo n = 5;
+roer cheio {
+    n = n - 1;
+    farejar n == 2 {
+        escapar;
+    }
+    guinchar(n);
+}
+guinchar(n);
+#endregion
+
+#region condicional
+migalha pi = 3.14;
+farejar pi > 3 {
+    guinchar(31);
+} refarejar pi == 3 {
+    guinchar(32);
+} fujir {
+    guinchar(33);
+}
+#endregion
+
+#region booleano
+guinchar(cheio);
+guinchar(vazio);
+#endregion
+
+#region eventos
+ouvir jogador_entrou(nome) {
+    guinchar(nome);
+}
+sinalizar jogador_entrou(42);
+#endregion
+
+#region repetida
+contador = contador + 1;
+guinchar(contador);
+#endregion
+
+guinchar(20);
+#gotoregion repetida
+guinchar(21);
+#endregion
+
+#region start
+
+
+guinchar(1);
+
+
+
+queijo contador = 0;
+#endregion
+
+

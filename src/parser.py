@@ -1,4 +1,4 @@
-"""Parser sintático experimental da Rathyon (AST, sem execução).
+"""src/Parser sintático experimental da Rathyon (AST, sem execução).
 
 O Parser consome exclusivamente os tokens oficiais produzidos por Scanner.
 A estrutura da AST (dicionários com a chave ``type``) preserva o formato do
@@ -112,6 +112,22 @@ class Parser:
         return node("Block", body=body)
 
     def statement(self):
+        if _categoria(self.current()) == "REGION_START":
+            name = self.current().lexema
+            self.pos += 1
+            body = []
+            while _categoria(self.current()) not in ("REGION_END", "EOF"):
+                body.append(self.statement())
+            if _categoria(self.current()) != "REGION_END":
+                self.error("Esperado '#endregion'")
+            self.pos += 1
+            return node("Region", name=name, body=body)
+
+        if _categoria(self.current()) == "GOTO_REGION":
+            name = self.current().lexema
+            self.pos += 1
+            return node("GotoRegion", name=name)
+
         if self.at("farejar"):
             return self.conditional()
 

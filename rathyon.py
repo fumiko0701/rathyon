@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Rathyon
-Versão 0.1.1
+Versão 0.2.0
 Como usar: python rathyon.py <arquivo.ra> ou rathyon <arquivo.ra>
 """
 import sys
@@ -10,10 +10,9 @@ import re
 import json
 import code
 
-#importando
-#from src.lexer import Scanner, Cursor
-#from src.tokens import Token, Categoria, ErroLexico
-#quando a /src ficar pronta, pode importar
+from src.lexer import Scanner
+from src.parser import parse as parse_ast
+from src.executor import Executor
 
 
 #função para o PyInstaller achar a pasta certa ---
@@ -114,7 +113,7 @@ def iniciar_repl():
         print(f"Erro ao carregar config/palavras_reservadas.json: {e}")
         sys.exit(1)
 
-    print("Rathyon 0.0.4 - CLI interativa")
+    print("Rathyon 0.2.0 - CLI interativa")
     print("Digite instruções Rathyon. Ctrl+Z para sair.\n")
     console = RathyonConsole(mapa)
     console.interact(banner="")
@@ -147,22 +146,25 @@ def main():
         print(f"Erro ao carregar config/palavras_reservadas.json: {e}")
         sys.exit(1)
 
-    codigo_original = codigo
-    codigo = traduzir(codigo, mapa)
+    #codigo_original = codigo
+    #codigo = traduzir(codigo, mapa)
 
     #roda .ra como se fosse py puro.
     try:
-        exec(compile(codigo, caminho, "exec"), {"__name__": "__main__", "__file__": caminho})
-    except SyntaxError as e:
-        print(f"Erro de sintaxe em {caminho}: {e}")
-        pausar_se_necessario(codigo_original, ja_erro=True)
+        ast = parse_ast(codigo)
+    except Exception as e:
+        print(f"Erro de sintaxe/lexico em {caminho}: {e}")
+        pausar_se_necessario(codigo, ja_erro=True)
         sys.exit(1)
+
+    try:
+        Executor().rodar(ast)
     except Exception as e:
         print(f"Erro ao executar: {e}")
-        pausar_se_necessario(codigo_original, ja_erro=True)
+        pausar_se_necessario(codigo, ja_erro=True)
         sys.exit(2)
 
-    pausar_se_necessario(codigo_original)
+    pausar_se_necessario(codigo)
 
 
 if __name__ == "__main__":

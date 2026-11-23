@@ -15,5 +15,8 @@
   "for": "vasculhar",
   "in": "dentro",
   "def": "cavar",
-  "range": "trilha"
+  "range": "trilha",
+  "region": "region",
+  "endregion": "endregion",
+  "goto": "gotoregion"
 }

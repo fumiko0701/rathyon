@@ -13,7 +13,7 @@
 <br/>
 
 - **Extensão:** `.ra`
-- **Versão da linguagem:** 0.0.1
+- **Versão da linguagem:** 0.2.0
 - **Implementação:** Python (interpretador em arquivo único)
 - **Plataforma do instalador:** Windows
 
