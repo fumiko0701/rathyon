@@ -35,7 +35,7 @@ def eh_digito(c: str) -> bool:
     return '0' <= c <= '9'
 
 def reconhecer_diretiva(cursor: "Cursor"):
-    """Reconhece #region NOME, #endregion e #gotoregion NOME.
+    """Reconhece #tunel NOME, #toca e #vaparatunel NOME.
 
     Emite tokens REGION_START / REGION_END / GOTO_REGION.
     Qualquer outro '#' vira ErroLexico de um caractere.
@@ -59,27 +59,27 @@ def reconhecer_diretiva(cursor: "Cursor"):
         while not cursor.fim() and cursor.peek() != '\n':
             cursor.avancar()
 
-    if nome == "region":
+    if nome == "tunel":
         reg = _ler_identificador()
         if not reg:
             cursor.restaurar(inicio)
             primeiro = cursor.avancar()
             return ErroLexico(primeiro, inicio[1], inicio[2],
-                              "'#region' sem nome de região")
+                              "'#tunel' sem nome de região")
         _pular_resto_da_linha()
         return Token(Categoria.REGION_START, reg, inicio[1], inicio[2])
 
-    if nome == "endregion":
+    if nome == "toca":
         _pular_resto_da_linha()
         return Token(Categoria.REGION_END, "", inicio[1], inicio[2])
 
-    if nome == "gotoregion":
+    if nome == "vaparatunel":
         reg = _ler_identificador()
         if not reg:
             cursor.restaurar(inicio)
             primeiro = cursor.avancar()
             return ErroLexico(primeiro, inicio[1], inicio[2],
-                              "'#gotoregion' sem nome de região")
+                              "'#vaparatunel' sem nome de região")
         _pular_resto_da_linha()
         return Token(Categoria.GOTO_REGION, reg, inicio[1], inicio[2])
 

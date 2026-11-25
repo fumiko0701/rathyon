@@ -1,24 +1,24 @@
-#region end
+#tunel end
 guinchar(99);
-#endregion
+#toca
 
-#region step
+#tunel step
 guinchar(10);
 
-#region soma
+#tunel soma
 cavar somar(a, b) {
     voltar a + b;
 }
 guinchar(somar(10, 20));
-#endregion
+#toca
 
-#region contagem
+#tunel contagem
 vasculhar i dentro trilha(3) {
     guinchar(i);
 }
-#endregion
+#toca
 
-#region laco
+#tunel laco
 queijo n = 5;
 roer cheio {
     n = n - 1;
@@ -28,9 +28,9 @@ roer cheio {
     guinchar(n);
 }
 guinchar(n);
-#endregion
+#toca
 
-#region condicional
+#tunel condicional
 migalha pi = 3.14;
 farejar pi > 3 {
     guinchar(31);
@@ -39,31 +39,31 @@ farejar pi > 3 {
 } fujir {
     guinchar(33);
 }
-#endregion
+#toca
 
-#region booleano
+#tunel booleano
 guinchar(cheio);
 guinchar(vazio);
-#endregion
+#toca
 
-#region eventos
+#tunel eventos
 ouvir jogador_entrou(nome) {
     guinchar(nome);
 }
 sinalizar jogador_entrou(42);
-#endregion
+#toca
 
-#region repetida
+#tunel repetida
 contador = contador + 1;
 guinchar(contador);
-#endregion
+#toca
 
 guinchar(20);
-#gotoregion repetida
+#vaparatunel repetida
 guinchar(21);
-#endregion
+#toca
 
-#region start
+#tunel start
 
 
 guinchar(1);
@@ -71,6 +71,6 @@ guinchar(1);
 
 
 queijo contador = 0;
-#endregion
+#toca
 
 

@@ -12,12 +12,12 @@
             "patterns": [
                 {
                     "name": "meta.region.rathyon",
-                    "begin": "^(\\s*)(#region)\\s+(\\w+)(.*)$",
+                    "begin": "^(\\s*)(#tunel)\\s+(\\w+)(.*)$",
                     "beginCaptures": {
                         "2": { "name": "keyword.control.region.rathyon" },
                         "3": { "name": "entity.name.region.rathyon" }
                     },
-                    "end": "^(\\s*)(#endregion)\\b",
+                    "end": "^(\\s*)(#toca)\\b",
                     "endCaptures": {
                         "2": { "name": "keyword.control.endregion.rathyon" }
                     },
@@ -30,9 +30,9 @@
                     ]
                 },
                 {
-                    "match": "^(\\s*)(#gotoregion)\\s+(\\w+)(.*)$",
+                    "match": "^(\\s*)(#vaparatunel)\\s+(\\w+)(.*)$",
                     "captures": {
-                        "2": { "name": "keyword.control.gotoregion.rathyon" },
+                        "2": { "name": "keyword.control.vaparatunel.rathyon" },
                         "3": { "name": "entity.name.region.rathyon" }
                     }
                 }

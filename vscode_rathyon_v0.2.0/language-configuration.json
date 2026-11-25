@@ -21,8 +21,8 @@
     ],
     "folding": {
         "markers": {
-            "start": "^\\s*#region\\b",
-            "end": "^\\s*#endregion\\b"
+            "start": "^\\s*#tunel\\b",
+            "end": "^\\s*#toca\\b"
         }
     }
 }

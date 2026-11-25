@@ -46,6 +46,14 @@
 - **Atribuição:** `=`
 - **Comentário:** `// texto`
 - **Texto:** `"entre aspas"`
+
+### Regiões
+
+As regiões organizam blocos do programa e permitem saltar para uma região pelo nome:
+
+- `#tunel nome` — inicia uma região.
+- `#toca` — encerra a região atual.
+- `#vaparatunel nome` — salta para a região indicada.
 ---
 ### Regras e limitações
 

@@ -109,6 +109,29 @@ class TestScanner(unittest.TestCase):
         self.assertEqual(tokens_eof[-1].categoria, Categoria.EOF)
         self.assertEqual(tokens_eof[-1].lexema, "")
 
+    def test_diretivas_de_regiao_rathyon(self):
+        """As diretivas novas geram as categorias oficiais de região."""
+        tokens, erros = self.scan(
+            "#tunel inicio\n#toca\n#vaparatunel inicio"
+        )
+        self.assertEqual(erros, [])
+        self.assertEqual(
+            [(token.categoria, token.lexema) for token in tokens],
+            [
+                (Categoria.REGION_START, "inicio"),
+                (Categoria.REGION_END, ""),
+                (Categoria.GOTO_REGION, "inicio"),
+            ],
+        )
+
+    def test_diretiva_antiga_nao_e_mais_reconhecida(self):
+        """A grafia antiga #region não deve continuar sendo uma diretiva."""
+        tokens, erros = self.scan("#region inicio")
+        self.assertTrue(erros)
+        self.assertFalse(any(
+            token.categoria == Categoria.REGION_START for token in tokens
+        ))
+
     def test_posicao_linha_coluna(self):
         """Linha e coluna 1-based apontam para o primeiro caractere do lexema."""
         tokens, _ = self.scan("a\nb;")

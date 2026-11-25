@@ -132,7 +132,7 @@ class Executor:
 
 
     def _exec_program(self, statements):
-        """Executa o programa. #region start roda primeiro, #region end por último.
+        """Executa o programa. #tunel start roda primeiro, #tunel end por último.
 
         O posicionamento dessas regiões no arquivo é irrelevante: são encontradas
         pelo nome 'start' / 'end' em qualquer índice. Se não existirem, nada muda.
@@ -148,7 +148,7 @@ class Executor:
                 elif stmt["name"] == "end" and end_idx < 0:
                     end_idx = i
 
-        # 1) #region start primeiro (se existir)
+        # 1) #tunel start primeiro (se existir)
         if start_idx >= 0:
             self.exec_node(statements[start_idx])
 
@@ -166,22 +166,22 @@ class Executor:
                 name = stmt["name"]
                 if name in ("start", "end"):
                     raise RuntimeError(
-                        f"#gotoregion '{name}': 'start' e 'end' são reservadas")
+                        f"#vaparatunel '{name}': 'start' e 'end' são reservadas")
                 if name not in region_map:
                     raise RuntimeError(
-                        f"#gotoregion '{name}': região não encontrada neste bloco")
+                        f"#vaparatunel '{name}': região não encontrada neste bloco")
                 self.fired_gotos.add(id(stmt))
                 i = region_map[name]
                 continue
             self.exec_node(stmt)
             i += 1
 
-        # 3) #region end por último (se existir)
+        # 3) #tunel end por último (se existir)
         if end_idx >= 0:
             self.exec_node(statements[end_idx])
 
     def _exec_block_with_regions(self, statements):
-        """Executa uma lista de comandos com PC e suporte a #gotoregion."""
+        """Executa uma lista de comandos com PC e suporte a #vaparatunel."""
         region_map = {}
         for i, stmt in enumerate(statements):
             if stmt["type"] == "Region":
@@ -197,7 +197,7 @@ class Executor:
                 name = stmt["name"]
                 if name not in region_map:
                     raise RuntimeError(
-                        f"#gotoregion '{name}': região não encontrada neste bloco")
+                        f"#vaparatunel '{name}': região não encontrada neste bloco")
                 self.fired_gotos.add(id(stmt))
                 i = region_map[name]
                 continue

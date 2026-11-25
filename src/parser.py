@@ -119,7 +119,7 @@ class Parser:
             while _categoria(self.current()) not in ("REGION_END", "EOF"):
                 body.append(self.statement())
             if _categoria(self.current()) != "REGION_END":
-                self.error("Esperado '#endregion'")
+                self.error("Esperado '#toca'")
             self.pos += 1
             return node("Region", name=name, body=body)
 

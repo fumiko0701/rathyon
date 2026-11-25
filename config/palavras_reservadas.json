@@ -16,7 +16,7 @@
   "in": "dentro",
   "def": "cavar",
   "range": "trilha",
-  "region": "region",
-  "endregion": "endregion",
-  "goto": "gotoregion"
+  "region": "tunel",
+  "endregion": "toca",
+  "goto": "vaparatunel"
 }

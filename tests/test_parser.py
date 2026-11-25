@@ -94,6 +94,19 @@ class TestParser(unittest.TestCase):
         with self.assertRaises(RathyonLexicalError):
             parse('guinchar("oi");')
 
+    def test_diretivas_de_regiao_com_nova_sintaxe(self):
+        ast = parse(
+            "#tunel inicio\n"
+            "queijo x = 1;\n"
+            "#toca\n"
+            "#vaparatunel inicio"
+        )
+        self.assertEqual(ast["body"][0]["type"], "Region")
+        self.assertEqual(ast["body"][0]["name"], "inicio")
+        self.assertEqual(ast["body"][0]["body"][0]["name"], "x")
+        self.assertEqual(ast["body"][1]["type"], "GotoRegion")
+        self.assertEqual(ast["body"][1]["name"], "inicio")
+
     def test_parse_tokens_usa_tokens_do_scanner(self):
         tokens, errors = Scanner("queijo x;").scan(incluir_eof=True)
         self.assertEqual(errors, [])

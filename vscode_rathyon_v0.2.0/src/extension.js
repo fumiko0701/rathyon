@@ -32,8 +32,8 @@ function updateDecorations(editor) {
     const regionStartLines = [];
 
     for (let i = 0; i < lines.length; i++) {
-        const startMatch = lines[i].match(/^(\s*)#region\s+(\w+)/);
-        const endMatch = lines[i].match(/^\s*#endregion\b/);
+        const startMatch = lines[i].match(/^(\s*)#tunel\s+(\w+)/);
+        const endMatch = lines[i].match(/^\s*#toca\b/);
         if (startMatch) {
             const depth = stack.length + 1;
             stack.push({ name: startMatch[2], start: i, depth });
@@ -62,14 +62,14 @@ function updateDecorations(editor) {
         editor.setDecorations(bg, ranges);
     }
 
-    // 2) Keywords em amarelo bold (#region / #endregion / #gotoregion)
+    // 2) Keywords em amarelo bold (#tunel / #toca / #vaparatunel)
     const kwDeco = vscode.window.createTextEditorDecorationType({
         color: '#FFCC00',
         fontWeight: 'bold',
     });
     decorations.push(kwDeco);
     const kwRanges = [];
-    const kws = ['#region', '#endregion', '#gotoregion'];
+    const kws = ['#tunel', '#toca', '#vaparatunel'];
     for (let i = 0; i < lines.length; i++) {
         for (const kw of kws) {
             let idx = lines[i].indexOf(kw);
@@ -81,15 +81,15 @@ function updateDecorations(editor) {
     }
     if (kwRanges.length > 0) editor.setDecorations(kwDeco, kwRanges);
 
-    // 3) Nome da região (inclusive em #gotoregion) colorido por papel
+    // 3) Nome da região (inclusive em #vaparatunel) colorido por papel
     const roleTypes = new Map();
     const roleRanges = new Map();
     for (let i = 0; i < lines.length; i++) {
-        const mR = lines[i].match(/^(\s*)#region\s+(\w+)/);
-        const mG = lines[i].match(/^(\s*)#gotoregion\s+(\w+)/);
+        const mR = lines[i].match(/^(\s*)#tunel\s+(\w+)/);
+        const mG = lines[i].match(/^(\s*)#vaparatunel\s+(\w+)/);
         const m = mR || mG;
         if (!m) continue;
-        const kw = mR ? '#region' : '#gotoregion';
+        const kw = mR ? '#tunel' : '#vaparatunel';
         const nameStart = m[1].length + kw.length + 1;
         const nameEnd = nameStart + m[2].length;
         const color = getColorForRole(m[2]);
@@ -109,7 +109,7 @@ function updateDecorations(editor) {
         editor.setDecorations(roleTypes.get(color), ranges);
     }
 
-    // 4) Ícone no gutter na linha #region; cresce com a profundidade
+    // 4) Ícone no gutter na linha #tunel; cresce com a profundidade
     if (regionStartLines.length > 0) {
         const gutterTypes = new Map();
         for (const { depth } of regionStartLines) {

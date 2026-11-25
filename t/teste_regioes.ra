@@ -1,0 +1,12 @@
+#tunel inicio
+queijo idade = 20;
+guinchar(idade);
+#toca
+
+#tunel verificacao
+farejar idade > 18 {
+    guinchar(idade);
+}
+#toca
+
+#vaparatunel verificacao
