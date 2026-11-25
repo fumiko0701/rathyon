@@ -48,7 +48,15 @@ KEYWORD = farejar | refarejar | fujir | roer | queijo | migalha
           | vazio | vasculhar | dentro | trilha | cavar
 ```
 
-As diretivas `#tunel <nome>`, `#toca` e `#vaparatunel <nome>` são reconhecidas separadamente; não fazem parte dos AFDs descritos nesta lista. Consulte [SPECIFICATIONS.md](SPECIFICATIONS.md#31-diretivas-de-região).
+**Diretivas de região.** Não pertencem às categorias acima. Sejam `ESP = (espaço | tab)` e `RESTO = (qualquer caractere exceto \n)*`:
+
+```
+DIR_TUNEL = #tunel  ESP*  (letra | digito | _)+  RESTO
+DIR_GOTO  = #vaparatunel  ESP*  (letra | digito | _)+  RESTO
+DIR_TOCA  = #toca  RESTO
+```
+
+Condição: a palavra depois do `#` é a maior sequência de `(letra | _)`, e ela deve ser exatamente `tunel`, `vaparatunel` ou `toca`. Por isso `#tocaX` é erro e `#toca1` é aceito. AFDs e simulações em [AUTOMATA.md](AUTOMATA.md#45-diretivas-de-região); decisões D03 e D04 em [SPECIFICATIONS.md](SPECIFICATIONS.md).
 
 Na tabela de categorias da especificação, ARITHMETIC corresponde a ARITHMETIC_OPERATOR e RELATIONAL corresponde a RELATIONAL_OPERATOR. As expressões acima preservam os nomes utilizados na seção original.
 

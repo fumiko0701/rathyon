@@ -13,7 +13,7 @@ Cada AFD é `M = (Q, Σ, δ, q₀, F)` com `δ: Q × Σ → Q` total.
 - Um símbolo fora do Σ do AFD não é tratado por ele: o scanner escolhe outro reconhecedor ou reporta erro.
 - O AFD decide se uma **cadeia inteira** é aceita. Já o **scanner** aplica maximal munch (seção 4.4).
 
-As diretivas `#tunel <nome>`, `#toca` e `#vaparatunel <nome>` são reconhecidas por uma regra especial do Scanner, fora dos AFDs abaixo. Seus tokens estão listados em [SPECIFICATIONS.md](SPECIFICATIONS.md#31-diretivas-de-região).
+As diretivas de região (`#tunel`, `#toca`, `#vaparatunel`) estão formalizadas na seção 4.5.
 
 ## 2. Modelos
 
@@ -26,6 +26,8 @@ As diretivas `#tunel <nome>`, `#toca` e `#vaparatunel <nome>` são reconhecidas 
 | Atribuição e relacionais | {q₀, …, q₈, q_d} | {=, !, <, >} | {q₁, q₂, q₄, q₅, q₆, q₇, q₈} |
 | Aritméticos | {q₀, q_f, q_d} | {+, -, *, /} | {q_f} |
 | Delimitadores | {q₀, q_f, q_d} | {(, ), {, }, ;, ,} | {q_f} |
+| Palavra de diretiva (M_DIR) | {q₀, q₁, q₂, q_d} | {#} ∪ L ∪ {_} | {q₂} |
+| Nome de região (M_NOME) | {p₀, p₁, q_d} | L ∪ D ∪ {_, espaço, tab} | {p₁} |
 
 O estado inicial é sempre q₀.
 
@@ -130,7 +132,7 @@ se lexema ∈ K → KEYWORD
 senão         → IDENTIFIER
 ```
 
-## 4. Operadores e delimitadores (T05)
+## 4. Operadores, delimitadores e diretivas de região (T05)
 
 ### 4.1 Atribuição e relacionais
 
@@ -194,6 +196,59 @@ Os dois AFDs têm a mesma forma, com `Q = {q₀, q_f, q_d}` e `F = {q_f}`:
 | `!+;@` | erro `!` (col. 1), ARITHMETIC `+`, DELIMITER `;`, erro `@` (col. 4) |
 
 No último caso, o erro em `!` não descarta o `+`.
+
+### 4.5 Diretivas de região
+
+Formas: `#tunel nome` (abre região), `#toca` (fecha) e `#vaparatunel nome` (salta). O Scanner as reconhece em três etapas, cada uma um AFD simples.
+
+**Etapa 1: palavra da diretiva (M_DIR).** Lê `#` e a maior sequência de letras ou `_` que vem depois. Σ = {#} ∪ L ∪ {_}, F = {q₂}.
+
+| Estado | `#` | L | `_` | Significado |
+|---|---|---|---|---|
+| → q₀ | q₁ | q_d | q_d | Nada lido |
+| q₁ | q_d | q₂ | q₂ | `#` lido |
+| * q₂ | q_d | q₂ | q₂ | Palavra lida |
+| q_d | q_d | q_d | q_d | Sem palavra (`#` seguido de espaço, dígito ou símbolo) |
+
+A palavra lida é consultada no conjunto `D = {tunel, toca, vaparatunel}`, como o conjunto K das palavras reservadas. Se `palavra ∈ D`, segue a etapa 2; se não, o Scanner reporta erro no `#` e recomeça logo depois dele (`#foo` gera erro e depois IDENTIFIER `foo`).
+
+**Etapa 2: nome da região (M_NOME), só após `tunel` e `vaparatunel`.** Pula espaços e tabs e lê letras, dígitos ou `_`. Σ = L ∪ D ∪ {_, espaço, tab}, F = {p₁}.
+
+| Estado | L | D | `_` | espaço ou tab |
+|---|---|---|---|---|
+| → p₀ | p₁ | p₁ | p₁ | p₀ |
+| * p₁ | p₁ | p₁ | p₁ | q_d |
+| q_d | q_d | q_d | q_d | q_d |
+
+Se o nome ficar vazio (p₀ não é final), é erro: `'#tunel' sem nome`.
+
+**Etapa 3: resto da linha.** Tudo até o `\n` (exclusive) é descartado. O padrão é `R = (Σ ∖ {\n})*`.
+
+**Tokens emitidos** (linha e coluna apontam para o `#`):
+
+| Diretiva | Token | Lexema |
+|---|---|---|
+| `#tunel nome` | REGION_START | `nome` |
+| `#toca` | REGION_END | vazio |
+| `#vaparatunel nome` | GOTO_REGION | `nome` |
+
+**Simulações:**
+
+| Entrada | Percurso | Resultado |
+|---|---|---|
+| `#tunel inicio` | M_DIR: q₀ -#→ q₁ -t→ q₂ … -l→ q₂, `tunel` ∈ D. M_NOME: p₀ -espaço→ p₀ -i→ p₁ … -o→ p₁ | REGION_START `inicio` |
+| `#vaparatunel x` | M_DIR lê `vaparatunel` ∈ D. M_NOME: p₀ -espaço→ p₀ -x→ p₁ | GOTO_REGION `x` |
+| `#toca` | M_DIR lê `toca` ∈ D | REGION_END |
+| `#tunel` | M_DIR lê `tunel` ∈ D; M_NOME: p₀ não final | erro no `#`; depois IDENTIFIER `tunel` |
+| `#foo` | M_DIR lê `foo` ∉ D | erro no `#`; depois IDENTIFIER `foo` |
+| `# tunel a` | q₀ -#→ q₁ -espaço→ q_d | erro no `#`; depois IDENTIFIER `tunel` e `a` |
+| `#tocaX` | M_DIR lê `tocaX` ∉ D | erro no `#`; depois IDENTIFIER `tocaX` |
+
+**Comportamentos do código que a formalização revela** (decisões D03 e D04 da especificação):
+
+- **Dígito encerra a palavra:** `#tunel1` e `#toca1` são aceitos, pois M_DIR para no `1`. O primeiro vira REGION_START com nome `1`.
+- **Nome de região pode começar por dígito** (`#tunel 1abc`), ao contrário do IDENTIFIER da seção 3.1.
+- **Resto da linha é descartado sem análise:** `#toca guinchar(1);` ignora o `guinchar`, e `#tunel a @@` não gera erro.
 
 ## 5. Minimização (T06)
 
@@ -263,6 +318,18 @@ Os 10 pares ficam marcados e não há fusão.
 
 **INTEGER: mínimo com 2 estados.** Com Σ = D, nenhuma cadeia leva q₀ a q_d, então q_d é inalcançável e sai. Resta o par (q₀,q₁), distinguido por ε na rodada 0. A linguagem `D+` não muda. Isso corrige a afirmação do PDF de que o modelo de 3 estados é mínimo.
 
+**M_DIR: mínimo (4 estados).** Alcançáveis: q₀ (ε), q₁ (`#`), q₂ (`#a`), q_d (`a`). Único final: q₂.
+
+| Rodada | Pares marcados | Motivo |
+|---|---|---|
+| 0 | (q₀,q₂) (q₁,q₂) (q₂,q_d) | final × não final |
+| 1 | (q₁,q_d) (q₀,q₁) | com L vão a (q₂,q_d) e (q_d,q₂) |
+| 2 | (q₀,q_d) | com `#` vai a (q₁,q_d) |
+
+Os 6 pares ficam marcados e não há fusão.
+
+**M_NOME: mínimo (3 estados).** Alcançáveis: p₀ (ε), p₁ (`a`), q_d (`a espaço`). Rodada 0: (p₀,p₁) e (p₁,q_d). Rodada 1: (p₀,q_d), pois com L vai a (p₁,q_d).
+
 **IDENTIFIER, aritméticos e delimitadores: mínimos com 3 estados.** Todos têm a mesma estrutura de pares:
 
 | AFD | Alcança q₀, q₁ (ou q_f), q_d por | Rodada 0 | Rodada 1 |
@@ -282,6 +349,8 @@ Os 10 pares ficam marcados e não há fusão.
 | Atribuição e relacionais | 10 | 5 | Fusão A e B; categoria pelo lexema |
 | Aritméticos | 3 | 3 | Já mínimo |
 | Delimitadores | 3 | 3 | Já mínimo |
+| Palavra de diretiva (M_DIR) | 4 | 4 | Já mínimo |
+| Nome de região (M_NOME) | 3 | 3 | Já mínimo |
 
 Palavras reservadas não têm AFD próprio: o scanner lê o identificador completo e consulta o conjunto K (17 palavras, seção 3.5).
 
@@ -291,4 +360,5 @@ Palavras reservadas não têm AFD próprio: o scanner lê o identificador comple
 - [ ] Revisão independente da minimização (T06), por alguém que não fez os cálculos.
 - [ ] Reconferir a seção 3.4 contra os casos finais do T11.
 - [ ] Avisar o grupo da correção do INTEGER (2 estados).
+- [ ] Decidir D03 e D04 (token das diretivas e resto da linha) em SPECIFICATIONS.md.
 - [ ] Aprovar as 4 palavras novas (`vasculhar`, `dentro`, `cavar`, `trilha`) e atualizar K em todos os documentos.

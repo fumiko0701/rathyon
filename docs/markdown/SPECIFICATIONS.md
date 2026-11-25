@@ -18,10 +18,10 @@ Este arquivo contém apenas a T01. As regras seguem o PDF e têm status **PROPOS
 | --- | --- |
 | Letras `L` | `a` a `z` e `A` a `Z`, sem acento |
 | Dígitos `D` | `0` a `9` |
-| Símbolos | `+`, `-`, `*`, `/`, `=`, `!`, `<`, `>`, `(`, `)`, `{`, `}`, `;`, `,`, `.`, `_` |
+| Símbolos | `+`, `-`, `*`, `/`, `=`, `!`, `<`, `>`, `(`, `)`, `{`, `}`, `;`, `,`, `.`, `_`, `#` |
 | Separadores | Espaço, tabulação e quebra de linha (`\n`) |
 
-O alfabeto `Σ` reúne esses quatro grupos. Separadores não geram tokens. `!` e `.` pertencem ao alfabeto, mas não são tokens isolados.
+O alfabeto `Σ` reúne esses quatro grupos. Separadores não geram tokens. `!` e `.` pertencem ao alfabeto, mas não são tokens isolados. `#` só é válido no início de uma diretiva de região (seção 3.1); em qualquer outro uso é erro.
 
 ## 3. Categorias de tokens
 
@@ -40,15 +40,15 @@ Um **token** é uma parte reconhecida do código, como um nome, número ou opera
 
 ### 3.1 Diretivas de região
 
-O Scanner também reconhece estas diretivas e emite um token próprio para cada uma:
+O Scanner reconhece três diretivas, cada uma com um token próprio. A palavra depois do `#` pertence ao conjunto `D = {tunel, toca, vaparatunel}`.
 
-| Forma | Token |
-| --- | --- |
-| `#tunel <nome>` | `REGION_START` |
-| `#toca` | `REGION_END` |
-| `#vaparatunel <nome>` | `GOTO_REGION` |
+| Forma | Token | Lexema do token |
+| --- | --- | --- |
+| `#tunel <nome>` | `REGION_START` | o nome |
+| `#toca` | `REGION_END` | vazio |
+| `#vaparatunel <nome>` | `GOTO_REGION` | o nome |
 
-O marcador `#` é aceito nessas formas e tratado separadamente dos AFDs de símbolos desta especificação.
+Linha e coluna do token apontam para o `#`. `#` seguido de palavra fora de `D`, de espaço ou de símbolo gera erro no `#`, e a leitura continua logo depois. `#tunel` ou `#vaparatunel` sem nome também geram erro. A formalização (ERs, AFDs e simulações) está em [AUTOMATA.md](AUTOMATA.md#45-diretivas-de-região). Dois comportamentos do código dependem de decisão do grupo: D03 e D04.
 
 ## 4. Palavras reservadas — conjunto K
 
@@ -116,3 +116,16 @@ Todas aguardam resposta do grupo. Quando uma decisão for tomada, registrar nest
 - **Proposta:** incluir `vasculhar` (`for`), `dentro` (`in`), `trilha` (`range`) e `cavar` (`def`) em K, como `KEYWORD`, com K passando de 13 para 17 palavras.
 - **Alternativas:** manter só as 13 palavras (e então `for`, `in`, `range` e `def` não fazem parte da linguagem) ou escolher outros nomes.
 - **Efeito:** nenhum AFD muda. O conjunto K e os testes de palavras reservadas passam a incluir as quatro palavras.
+
+### D03 — token das diretivas e nome da região
+
+- **Situação atual (código):** um token por diretiva, com o nome da região no lexema. O nome é lido por um AFD próprio (M_NOME) que aceita começar por dígito (`#tunel 1abc`), e `#tunel1` é aceito sem espaço.
+- **Proposta B:** o token da diretiva leva o lexema `#tunel`, `#toca` ou `#vaparatunel`, e o nome vira um `IDENTIFIER` comum, lido pelo AFD da seção 3.1 do `AUTOMATA.md`. O nome passa a obedecer à regra de identificadores e exige separador depois da diretiva.
+- **Efeito da proposta B:** o parser passa a consumir um IDENTIFIER depois da diretiva. M_NOME deixa de existir e o Scanner fica mais uniforme.
+
+### D04 — resto da linha depois da diretiva
+
+- **Situação atual (código):** o Scanner descarta tudo até o fim da linha. `#toca guinchar(1);` ignora o `guinchar`, e `#tunel a @@` não gera erro.
+- **Proposta:** não descartar; o que sobra na linha é lido normalmente.
+- **Alternativa:** manter o descarte e documentá-lo como comentário da diretiva.
+- **Efeito:** remover a etapa 3 (resto da linha) do reconhecedor de diretivas.
