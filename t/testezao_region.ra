@@ -1,8 +1,8 @@
-#tunel end
+#tunel saida
 guinchar(99);
 #toca
 
-#tunel step
+#tunel passagem
 guinchar(10);
 
 #tunel soma
@@ -63,7 +63,7 @@ guinchar(20);
 guinchar(21);
 #toca
 
-#tunel start
+#tunel entrada
 
 
 guinchar(1);

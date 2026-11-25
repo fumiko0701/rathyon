@@ -132,10 +132,10 @@ class Executor:
 
 
     def _exec_program(self, statements):
-        """Executa o programa. #tunel start roda primeiro, #tunel end por último.
+        """Executa o programa. #tunel entrada roda primeiro, #tunel saida por último.
 
         O posicionamento dessas regiões no arquivo é irrelevante: são encontradas
-        pelo nome 'start' / 'end' em qualquer índice. Se não existirem, nada muda.
+        pelo nome 'entrada' / 'saida' em qualquer índice. Se não existirem, nada muda.
         """
         start_idx = -1
         end_idx = -1
@@ -143,16 +143,16 @@ class Executor:
         for i, stmt in enumerate(statements):
             if stmt["type"] == "Region":
                 region_map[stmt["name"]] = i
-                if stmt["name"] == "start" and start_idx < 0:
+                if stmt["name"] == "entrada" and start_idx < 0:
                     start_idx = i
-                elif stmt["name"] == "end" and end_idx < 0:
+                elif stmt["name"] == "saida" and end_idx < 0:
                     end_idx = i
 
-        # 1) #tunel start primeiro (se existir)
+        # 1) #tunel entrada primeiro (se existir)
         if start_idx >= 0:
             self.exec_node(statements[start_idx])
 
-        # 2) fluxo normal, pulando start/end
+        # 2) fluxo normal, pulando entrada/saida
         i = 0
         while i < len(statements):
             if i == start_idx or i == end_idx:
@@ -164,9 +164,9 @@ class Executor:
                     i += 1
                     continue
                 name = stmt["name"]
-                if name in ("start", "end"):
+                if name in ("entrada", "saida"):
                     raise RuntimeError(
-                        f"#vaparatunel '{name}': 'start' e 'end' são reservadas")
+                        f"#vaparatunel '{name}': 'entrada' e 'saida' são reservadas")
                 if name not in region_map:
                     raise RuntimeError(
                         f"#vaparatunel '{name}': região não encontrada neste bloco")
@@ -176,7 +176,7 @@ class Executor:
             self.exec_node(stmt)
             i += 1
 
-        # 3) #tunel end por último (se existir)
+        # 3) #tunel saida por último (se existir)
         if end_idx >= 0:
             self.exec_node(statements[end_idx])
 

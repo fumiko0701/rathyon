@@ -11,9 +11,9 @@ function clearDecorations() {
 
 function getColorForRole(name) {
     switch (name) {
-        case 'start': return '#4CAF50'; // verde
-        case 'step':  return '#2196F3'; // azul
-        case 'end':   return '#F44336'; // vermelho
+        case 'entrada':   return '#4CAF50'; // verde
+        case 'passagem':  return '#2196F3'; // azul
+        case 'saida':     return '#F44336'; // vermelho
         default:      return null;      // herda (custom)
     }
 }

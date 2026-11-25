@@ -10,14 +10,14 @@ from src.parser import parse
 class TestRegioes(unittest.TestCase):
     def test_salto_para_regiao_com_nova_diretiva(self):
         codigo = (
-            "#tunel start\n"
+            "#tunel entrada\n"
             "guinchar(1);\n"
             "#toca\n"
             "#vaparatunel etapa\n"
             "#tunel etapa\n"
             "guinchar(2);\n"
             "#toca\n"
-            "#tunel end\n"
+            "#tunel saida\n"
             "guinchar(3);\n"
             "#toca\n"
         )

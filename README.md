@@ -54,6 +54,8 @@ As regiões organizam blocos do programa e permitem saltar para uma região pelo
 - `#tunel nome` — inicia uma região.
 - `#toca` — encerra a região atual.
 - `#vaparatunel nome` — salta para a região indicada.
+
+As regiões `entrada` e `saida` são executadas no início e no fim do programa. `passagem` identifica uma região comum e recebe destaque no VS Code.
 ---
 ### Regras e limitações
 
