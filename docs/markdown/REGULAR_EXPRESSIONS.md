@@ -48,6 +48,8 @@ KEYWORD = farejar | refarejar | fujir | roer | queijo | migalha
           | vazio | vasculhar | dentro | trilha | cavar
 ```
 
+As diretivas `#tunel <nome>`, `#toca` e `#vaparatunel <nome>` são reconhecidas separadamente; não fazem parte dos AFDs descritos nesta lista. Consulte [SPECIFICATIONS.md](SPECIFICATIONS.md#31-diretivas-de-região).
+
 Na tabela de categorias da especificação, ARITHMETIC corresponde a ARITHMETIC_OPERATOR e RELATIONAL corresponde a RELATIONAL_OPERATOR. As expressões acima preservam os nomes utilizados na seção original.
 
 ## 4. Descrição dos padrões
@@ -189,7 +191,7 @@ Espaço, tabulação e quebra de linha são ignorados e funcionam como separador
 - Notação das expressões explicada.
 - Prioridade de KEYWORD sobre IDENTIFIER explicada.
 - Exemplos aceitos e rejeitados apresentados para cada padrão.
-- Padrões conferidos com a especificação aprovada na T01.
+- Padrões conferidos com a proposta da T01; a aprovação do grupo continua pendente.
 - Seção correspondente integrada ao relatório em LaTeX.
 
 Este arquivo constitui o entregável Markdown da T02. A aprovação da especificação na T01 e a integração ao relatório LaTeX devem ser verificadas pelo grupo.

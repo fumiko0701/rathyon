@@ -38,6 +38,18 @@ Um **token** é uma parte reconhecida do código, como um nome, número ou opera
 | `ASSIGNMENT` | `=` |
 | `DELIMITER` | `(`, `)`, `{`, `}`, `;`, `,` |
 
+### 3.1 Diretivas de região
+
+O Scanner também reconhece estas diretivas e emite um token próprio para cada uma:
+
+| Forma | Token |
+| --- | --- |
+| `#tunel <nome>` | `REGION_START` |
+| `#toca` | `REGION_END` |
+| `#vaparatunel <nome>` | `GOTO_REGION` |
+
+O marcador `#` é aceito nessas formas e tratado separadamente dos AFDs de símbolos desta especificação.
+
 ## 4. Palavras reservadas — conjunto K
 
 As 17 palavras abaixo são `KEYWORD` na proposta atual. As 13 primeiras vêm do PDF; as 4 últimas (`vasculhar`, `dentro`, `trilha`, `cavar`) foram acrescentadas a partir do `teste.ra` e dependem da decisão D02. A categoria de `cheio` e `vazio` ainda será confirmada (D01).
@@ -76,7 +88,7 @@ Confirmadas no PDF, mas ainda **PROPOSTAS** para aprovação do grupo:
 6. **Menos:** `-` é sempre operador. `-5` gera operador `-` e inteiro `5`.
 7. **Maior casamento (maximal munch):** escolher o maior trecho aceito, guardando o último estado final. `>=` gera um único token.
 8. **Posição:** ignorar separadores na saída, mas registrar linha e coluna de tokens e erros.
-9. **Erros:** caracteres fora de `Σ`, como `@`, e `!` isolado geram erro. A leitura continua depois deles.
+9. **Erros:** caracteres fora de `Σ`, como `@`, `!` isolado e diretivas desconhecidas ou sem nome geram erro. A leitura continua depois deles.
 
 As regras numéricas abaixo estão **PENDENTES** de confirmação:
 
@@ -93,7 +105,7 @@ Comentários e strings não estão previstos na proposta inicial; confirmar esse
 
 ## 6. Decisões pendentes
 
-Todas aguardam resposta do grupo. Ao decidir, registrar em `decisions.md`: data, resposta, justificativa, quem validou e regras afetadas.
+Todas aguardam resposta do grupo. Quando uma decisão for tomada, registrar nesta seção a data, a resposta, a justificativa, quem validou e as regras afetadas.
 
 ### D01 — cheio e vazio
 
