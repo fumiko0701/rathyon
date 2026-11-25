@@ -88,29 +88,37 @@ def reconhecer_diretiva(cursor: "Cursor"):
     return ErroLexico(primeiro, inicio[1], inicio[2],
                       f"caractere fora do alfabeto: {primeiro!r}")
 
+# Tabela fixa de classes para caracteres ASCII (Σ dos AFDs).
+_CLASSE_ASCII: dict[str, str] = {}
+
+
+def _construir_tabela_classe() -> dict[str, str]:
+    tabela: dict[str, str] = {}
+    for codigo in range(128):
+        c = chr(codigo)
+        if eh_letra(c):
+            tabela[c] = 'L'
+        elif eh_digito(c):
+            tabela[c] = 'D'
+        elif c == '_':
+            tabela[c] = '_'
+        elif c == '.':
+            tabela[c] = '.'
+        elif c in '=!<>+-*/(){};,#':
+            tabela[c] = c
+    return tabela
+
+
+_CLASSE_ASCII = _construir_tabela_classe()
+
+
 def classe_simbolo(c: str) -> Optional[str]:
     """Retorna a coluna da tabela de transição para c, ou None se c ∉ Σ.
 
     Exemplos de fora de Σ: '@', '#', '~', 'á', '"'. Eles geram erro léxico
     e a leitura continua.
     """
-    if eh_letra(c):
-        return 'L'
-    if eh_digito(c):
-        return 'D'
-    if c == '_':
-        return '_'
-    if c == '.':
-        return '.'
-    if c in '=!<>':
-        return c
-    if c in '+-*/':
-        return c
-    if c in '(){};,':
-        return c
-    if c == '#':
-        return '#'
-    return None
+    return _CLASSE_ASCII.get(c)
 
 
 # Conjunto K de palavras reservadas (SPECIFICATIONS.md §4; 17 palavras).
@@ -286,20 +294,30 @@ def reconhecer_relacional(cursor: Cursor):
     return Token(cat, lexema, inicio[1], inicio[2])
 
 
+def _simples(cursor, delta, finais, categoria, mensagem_erro=None):
+    """Reconhece um token de um caractere (ou prefixo fixo) via AFD."""
+    inicio = cursor.salvar()
+    ult, _ = simular_afd(cursor, delta, finais)
+    if ult is None:
+        if cursor.pos > inicio[0]:
+            return ErroLexico(
+                cursor.texto[inicio[0]:cursor.pos], inicio[1], inicio[2],
+                mensagem_erro or "construção inválida")
+        return None
+    cursor.restaurar(ult)
+    return Token(categoria, cursor.texto[inicio[0]:cursor.pos],
+                 inicio[1], inicio[2])
+
+
 def reconhecer_aritmetico(cursor: Cursor) -> Token:
     """AFD dos operadores aritméticos (+, -, *, /). Um caractere por token."""
-    inicio = cursor.salvar()
-    ult, _ = simular_afd(cursor, DELTA_ARI, F_ARI)
-    cursor.restaurar(ult)
-    return Token(Categoria.ARITHMETIC_OPERATOR, cursor.texto[inicio[0]:cursor.pos], inicio[1], inicio[2])
+    return _simples(cursor, DELTA_ARI, F_ARI,
+                    Categoria.ARITHMETIC_OPERATOR)
 
 
 def reconhecer_delimitador(cursor: Cursor) -> Token:
     """AFD dos delimitadores (( ) { } ; ,). Um caractere por token."""
-    inicio = cursor.salvar()
-    ult, _ = simular_afd(cursor, DELTA_DEL, F_DEL)
-    cursor.restaurar(ult)
-    return Token(Categoria.DELIMITER, cursor.texto[inicio[0]:cursor.pos], inicio[1], inicio[2])
+    return _simples(cursor, DELTA_DEL, F_DEL, Categoria.DELIMITER)
 
 
 def reconhecer_qualquer(cursor: Cursor, palavras_reservadas: Iterable[str]):
@@ -311,18 +329,17 @@ def reconhecer_qualquer(cursor: Cursor, palavras_reservadas: Iterable[str]):
     c = cursor.peek()
     if c is None:
         return None
-    if eh_letra(c) or c == '_':
+    cls = classe_simbolo(c)
+    if cls in ('L', '_'):
         return reconhecer_identificador(cursor, palavras_reservadas)
-    if eh_digito(c):
+    if cls in ('D', '.'):
         return reconhecer_numero(cursor)
-    if c in '=!<>':
+    if cls in ('=', '!', '<', '>'):
         return reconhecer_relacional(cursor)
-    if c in '+-*/':
+    if cls in ('+', '-', '*', '/'):
         return reconhecer_aritmetico(cursor)
-    if c in '(){};,':
+    if cls in ('(', ')', '{', '}', ';', ','):
         return reconhecer_delimitador(cursor)
-    if c == '.':
-        return reconhecer_numero(cursor)
-    if c == '#':
+    if cls == '#':
         return reconhecer_diretiva(cursor)
     return None
