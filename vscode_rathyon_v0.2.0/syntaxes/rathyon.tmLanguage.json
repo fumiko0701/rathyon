@@ -12,6 +12,63 @@
             "patterns": [
                 {
                     "name": "meta.region.rathyon",
+                    "begin": "^(\\s*)(#tunel)\\s+(entrada)\\b",
+                    "beginCaptures": {
+                        "2": { "name": "keyword.control.region.rathyon" },
+                        "3": { "name": "entity.name.region.entrada.rathyon" }
+                    },
+                    "end": "^(\\s*)(#toca)\\b",
+                    "endCaptures": {
+                        "2": { "name": "keyword.control.endregion.rathyon" }
+                    },
+                    "patterns": [
+                        { "include": "#regions" },
+                        { "include": "#keywords" },
+                        { "include": "#strings" },
+                        { "include": "#numbers" },
+                        { "include": "#comments" }
+                    ]
+                },
+                {
+                    "name": "meta.region.rathyon",
+                    "begin": "^(\\s*)(#tunel)\\s+(passagem)\\b",
+                    "beginCaptures": {
+                        "2": { "name": "keyword.control.region.rathyon" },
+                        "3": { "name": "entity.name.region.passagem.rathyon" }
+                    },
+                    "end": "^(\\s*)(#toca)\\b",
+                    "endCaptures": {
+                        "2": { "name": "keyword.control.endregion.rathyon" }
+                    },
+                    "patterns": [
+                        { "include": "#regions" },
+                        { "include": "#keywords" },
+                        { "include": "#strings" },
+                        { "include": "#numbers" },
+                        { "include": "#comments" }
+                    ]
+                },
+                {
+                    "name": "meta.region.rathyon",
+                    "begin": "^(\\s*)(#tunel)\\s+(saida)\\b",
+                    "beginCaptures": {
+                        "2": { "name": "keyword.control.region.rathyon" },
+                        "3": { "name": "entity.name.region.saida.rathyon" }
+                    },
+                    "end": "^(\\s*)(#toca)\\b",
+                    "endCaptures": {
+                        "2": { "name": "keyword.control.endregion.rathyon" }
+                    },
+                    "patterns": [
+                        { "include": "#regions" },
+                        { "include": "#keywords" },
+                        { "include": "#strings" },
+                        { "include": "#numbers" },
+                        { "include": "#comments" }
+                    ]
+                },
+                {
+                    "name": "meta.region.rathyon",
                     "begin": "^(\\s*)(#tunel)\\s+(\\w+)(.*)$",
                     "beginCaptures": {
                         "2": { "name": "keyword.control.region.rathyon" },
@@ -30,6 +87,27 @@
                     ]
                 },
                 {
+                    "match": "^(\\s*)(#vaparatunel)\\s+(entrada)\\b",
+                    "captures": {
+                        "2": { "name": "keyword.control.vaparatunel.rathyon" },
+                        "3": { "name": "entity.name.region.entrada.rathyon" }
+                    }
+                },
+                {
+                    "match": "^(\\s*)(#vaparatunel)\\s+(passagem)\\b",
+                    "captures": {
+                        "2": { "name": "keyword.control.vaparatunel.rathyon" },
+                        "3": { "name": "entity.name.region.passagem.rathyon" }
+                    }
+                },
+                {
+                    "match": "^(\\s*)(#vaparatunel)\\s+(saida)\\b",
+                    "captures": {
+                        "2": { "name": "keyword.control.vaparatunel.rathyon" },
+                        "3": { "name": "entity.name.region.saida.rathyon" }
+                    }
+                },
+                {
                     "match": "^(\\s*)(#vaparatunel)\\s+(\\w+)(.*)$",
                     "captures": {
                         "2": { "name": "keyword.control.vaparatunel.rathyon" },
@@ -41,12 +119,28 @@
         "keywords": {
             "patterns": [
                 {
-                    "name": "keyword.control.rathyon",
+                    "name": "keyword.control.flow.rathyon",
                     "match": "\\b(farejar|refarejar|fujir|roer|escapar|voltar)\\b"
                 },
                 {
-                    "name": "keyword.other.rathyon",
-                    "match": "\\b(guinchar|queijo|migalha|cheio|vazio|ouvir|sinalizar|vasculhar|dentro|cavar|trilha)\\b"
+                    "name": "storage.type.rathyon",
+                    "match": "\\b(queijo|migalha)\\b"
+                },
+                {
+                    "name": "constant.language.boolean.rathyon",
+                    "match": "\\b(cheio|vazio)\\b"
+                },
+                {
+                    "name": "support.function.builtin.rathyon",
+                    "match": "\\b(guinchar|trilha|vasculhar|cavar)\\b"
+                },
+                {
+                    "name": "keyword.other.event.rathyon",
+                    "match": "\\b(ouvir|sinalizar)\\b"
+                },
+                {
+                    "name": "keyword.other.preposition.rathyon",
+                    "match": "\\b(dentro)\\b"
                 }
             ]
         },

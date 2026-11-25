@@ -2,7 +2,7 @@
     "name": "rathyon",
     "displayName": "Rathyon",
     "description": "Suporte de linguagem para Rathyon (.ra) com regiões visualmente destacadas",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "publisher": "fumiko0701",
     "engines": {
         "vscode": "^1.74.0"
@@ -30,13 +30,73 @@
                 "path": "./syntaxes/rathyon.tmLanguage.json"
             }
         ],
+        "configurationDefaults": {
+            "editor.tokenColorCustomizations": {
+                "[rathyon]": {
+                    "textMateRules": [
+                        {
+                            "scope": "keyword.control.flow.rathyon",
+                            "settings": { "foreground": "#F20544", "fontStyle": "bold" }
+                        },
+                        {
+                            "scope": "storage.type.rathyon",
+                            "settings": { "foreground": "#F29F05", "fontStyle": "bold" }
+                        },
+                        {
+                            "scope": "constant.language.boolean.rathyon",
+                            "settings": { "foreground": "#BF4904", "fontStyle": "bold" }
+                        },
+                        {
+                            "scope": "support.function.builtin.rathyon",
+                            "settings": { "foreground": "#F28705" }
+                        },
+                        {
+                            "scope": "keyword.other.event.rathyon",
+                            "settings": { "foreground": "#8C031C", "fontStyle": "bold" }
+                        },
+                        {
+                            "scope": "keyword.other.preposition.rathyon",
+                            "settings": { "foreground": "#BF4904" }
+                        },
+                        {
+                            "scope": "keyword.control.region.rathyon",
+                            "settings": { "foreground": "#FFCC00", "fontStyle": "bold" }
+                        },
+                        {
+                            "scope": "keyword.control.endregion.rathyon",
+                            "settings": { "foreground": "#FFCC00", "fontStyle": "bold" }
+                        },
+                        {
+                            "scope": "keyword.control.vaparatunel.rathyon",
+                            "settings": { "foreground": "#FFCC00", "fontStyle": "bold" }
+                        },
+                                                {
+                            "scope": "entity.name.region.entrada.rathyon",
+                            "settings": { "foreground": "#4CAF50", "fontStyle": "bold" }
+                        },
+                        {
+                            "scope": "entity.name.region.passagem.rathyon",
+                            "settings": { "foreground": "#FFCC00", "fontStyle": "bold" }
+                        },
+                        {
+                            "scope": "entity.name.region.saida.rathyon",
+                            "settings": { "foreground": "#F44336", "fontStyle": "bold" }
+                        },
+                        {
+                            "scope": "entity.name.region.rathyon",
+                            "settings": { "foreground": "#F29F05", "fontStyle": "bold" }
+                        }
+                    ]
+                }
+            }
+        },
         "configuration": {
             "title": "Rathyon",
             "properties": {
                 "rathyon.regionHighlightEnabled": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Destacar regiões #tunel / #toca (fundo suave, gutter e keywords coloridas)."
+                    "description": "Destacar regiões #tunel / #toca (fundo suave e ícone no gutter)."
                 }
             }
         }

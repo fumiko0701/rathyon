@@ -1,4 +1,4 @@
-queijo idade = 20
+queijo idade = 20;
 
 farejar idade > 18 {
     guinchar(idade);

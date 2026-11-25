@@ -5,6 +5,6 @@ ouvir jogador_entrou(nome) {
 ouvir jogador_saiu(nome) {
     guinchar(nome);
 }
-
+nome = "eae"
 sinalizar jogador_entrou(nome);
 sinalizar jogador_saiu(nome);
