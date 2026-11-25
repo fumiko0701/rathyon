@@ -13,7 +13,7 @@
 \usetikzlibrary{automata, positioning, arrows.meta}
 \usepackage{float}
 \usepackage{booktabs}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 \input{glyphtounicode}
 \pdfgentounicode=1
 
@@ -64,9 +64,9 @@ O desenvolvimento de uma mini-linguagem de programação envolve a definição d
 
 A proposta consiste em estabelecer uma linguagem temática na qual os elementos utilizados na construção dos comandos estejam relacionados a situações e comportamentos desses animais. Dessa maneira, conceitos como eventos e ações servem como referência para a organização das instruções, proporcionando uma identidade própria à linguagem e uma abordagem diferenciada para a aplicação dos conceitos de linguagens formais.
 
-No âmbito técnico, o relatório apresenta uma proposta teórica de analisador léxico (Scanner), que percorreria o código-fonte e classificaria seus elementos em categorias denominadas tokens. A proposta considera palavras reservadas, identificadores, operadores e outros componentes léxicos.
+No âmbito técnico, o relatório apresenta os conceitos e as regras do analisador léxico (Scanner), responsável por percorrer o código-fonte e classificar seus elementos em categorias denominadas tokens. A especificação formal ainda registra decisões pendentes de validação pelo grupo.
 
-O programa substitui palavras reservadas com \texttt{re.sub} e executa o código traduzido com \texttt{exec} do Python. O relatório aborda linguagens formais, expressões regulares e autômatos como parte da proposta teórica.
+Na execução de arquivos \texttt{.ra}, o programa usa Scanner, Parser e Executor. O console interativo segue um caminho separado e traduz algumas palavras para Python. O relatório aborda linguagens formais, expressões regulares e autômatos usados no Scanner.
 
 \section{Objetivos}
 
@@ -124,7 +124,7 @@ No desenvolvimento do Scanner, as expressões regulares são utilizadas para esp
 Autômatos finitos são modelos matemáticos utilizados para reconhecer linguagens regulares. Um autômato finito determinístico é definido por um conjunto de estados, um alfabeto, uma função de transição, um estado inicial e um conjunto de estados finais. 
 
 \section{Metodologia}
-Foram reunidas as palavras e os símbolos previstos para a linguagem. Depois, foram definidos padrões para os tokens e representados alguns reconhecedores por meio de autômatos. Os exemplos apresentados são simulações da proposta.
+Foram reunidas as palavras e os símbolos previstos para a linguagem. Depois, foram definidos padrões para os tokens e implementados reconhecedores por meio de autômatos. Os testes do projeto verificam o Scanner, o Parser e casos de integração.
 \section{Desenvolvimento do Scanner}
 \subsection{Especificação da Linguagem e Categorias de Tokens}
 A proposta considera palavras reservadas, identificadores, números inteiros e decimais, operadores e delimitadores.
@@ -137,11 +137,11 @@ Um identificador segue o padrão \texttt{(L|\_)(L|D|\_)*}, em que L representa u
 
 \subsection{Implementação e Funcionamento do Scanner}
 
-O programa substitui palavras reservadas com \texttt{re.sub} e executa o código traduzido com \texttt{exec} do Python.
+O Scanner implementado em \texttt{src/lexer.py} reconhece tokens e registra suas posições no código. Ele também reconhece as diretivas \texttt{\#tunel}, \texttt{\#toca} e \texttt{\#vaparatunel} por uma regra específica. O Parser, em \texttt{src/parser.py}, usa esses tokens para montar a árvore do programa. O Executor, em \texttt{src/executor.py}, percorre essa árvore e executa as instruções.
 
 \subsection{Tratamento de Erros Léxicos}
 
-Os exemplos de erro nos documentos de apoio fazem parte das simulações da proposta teórica.
+Quando encontra caracteres fora do alfabeto definido, o Scanner registra erros com linha e coluna e continua a leitura. Ao analisar um arquivo, o Parser interrompe a execução se houver erro léxico ou sintático.
 
 \section{Diagramas dos Autômatos}
 As tabelas de transição e simulações dos modelos propostos estão em \href{../markdown/AUTOMATA.md}{AUTOMATA.md}.
@@ -155,12 +155,13 @@ Os modelos e as simulações estão em \href{../markdown/AUTOMATA.md}{AUTOMATA.m
 Os modelos e as simulações estão em \href{../markdown/AUTOMATA.md}{AUTOMATA.md}.
 
 \section{Testes e Resultados}
-Os casos disponíveis nos documentos de apoio são simulações da proposta teórica.
+O projeto contém testes automatizados para o Scanner e o Parser, além de testes de integração. Eles verificam o reconhecimento de tokens, a formação da árvore e a execução do programa.
 \section{Conclusão}
-O relatório apresenta uma proposta teórica de análise léxica com tokens, expressões regulares e autômatos. O programa atual substitui palavras reservadas e executa o código traduzido com Python.
+O trabalho apresenta as regras léxicas e os autômatos do Rathyon. No programa atual, o Scanner, o Parser e o Executor formam o caminho usado para executar arquivos \texttt{.ra}. A especificação léxica continua em rascunho enquanto algumas decisões aguardam validação do grupo.
 \section{Referências}
 \begin{itemize}
-\item Projeto Rathyon. Código-fonte: \href{../../rathyon.py}{rathyon.py} e \href{../../config/palavras_reservadas.json}{JSON de palavras reservadas}.
+\item Projeto Rathyon. Código-fonte: \texttt{src/lexer.py}, \texttt{src/parser.py}, \texttt{src/executor.py} e \texttt{src/automata.py}.
+\item Projeto Rathyon. Testes automatizados: diretório \texttt{tests/}.
 \item Projeto Rathyon. Especificação léxica: \href{../markdown/SPECIFICATIONS.md}{SPECIFICATIONS.md}.
 \item Projeto Rathyon. Autômatos e expressões regulares: \href{../markdown/AUTOMATA.md}{autômatos} e \href{../markdown/REGULAR_EXPRESSIONS.md}{expressões regulares}.
 \item Projeto Rathyon. Gramática: \href{../markdown/grammar.md}{grammar.md}.

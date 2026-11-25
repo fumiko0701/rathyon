@@ -13,6 +13,8 @@ Cada AFD é `M = (Q, Σ, δ, q₀, F)` com `δ: Q × Σ → Q` total.
 - Um símbolo fora do Σ do AFD não é tratado por ele: o scanner escolhe outro reconhecedor ou reporta erro.
 - O AFD decide se uma **cadeia inteira** é aceita. Já o **scanner** aplica maximal munch (seção 4.4).
 
+As diretivas `#tunel <nome>`, `#toca` e `#vaparatunel <nome>` são reconhecidas por uma regra especial do Scanner, fora dos AFDs abaixo. Seus tokens estão listados em [SPECIFICATIONS.md](SPECIFICATIONS.md#31-diretivas-de-região).
+
 ## 2. Modelos
 
 | AFD | Q | Σ | F |

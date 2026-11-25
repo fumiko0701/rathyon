@@ -32,9 +32,9 @@ O desenvolvimento de uma mini-linguagem de programação envolve a definição d
 
 A proposta usa elementos temáticos relacionados a esses animais como referência para organizar eventos e ações, dando identidade própria à linguagem e uma abordagem diferenciada para aplicar conceitos de linguagens formais.
 
-O relatório apresenta uma proposta teórica de analisador léxico (Scanner), que percorreria o código-fonte e classificaria seus elementos em categorias chamadas tokens. A proposta considera palavras reservadas, identificadores, operadores e outros componentes léxicos.
+O relatório apresenta os conceitos e as regras do analisador léxico (Scanner), responsável por percorrer o código-fonte e classificar seus elementos em categorias chamadas tokens. A especificação formal ainda registra decisões pendentes de validação pelo grupo.
 
-O programa substitui palavras reservadas com `re.sub` e executa o código traduzido com `exec` do Python. O relatório aborda linguagens formais, expressões regulares e autômatos como parte da proposta teórica.
+Na execução de arquivos `.ra`, o programa usa Scanner, Parser e Executor. O console interativo segue um caminho separado e traduz algumas palavras para Python. O relatório aborda linguagens formais, expressões regulares e autômatos usados no Scanner.
 
 ## 2. Objetivos
 
@@ -82,7 +82,7 @@ Autômatos finitos são modelos matemáticos usados para reconhecer linguagens r
 
 ## 4. Metodologia
 
-Foram reunidas as palavras e os símbolos previstos para a linguagem. Depois, foram definidos padrões para os tokens e representados alguns reconhecedores por meio de autômatos. Os exemplos apresentados são simulações da proposta.
+Foram reunidas as palavras e os símbolos previstos para a linguagem. Depois, foram definidos padrões para os tokens e implementados reconhecedores por meio de autômatos. Os testes do projeto verificam o Scanner, o Parser e casos de integração.
 
 ## 5. Desenvolvimento do Scanner
 
@@ -96,11 +96,11 @@ Os padrões e as tabelas dos autômatos estão descritos em [REGULAR_EXPRESSIONS
 
 ### 5.3 Implementação e funcionamento do Scanner
 
-O programa substitui palavras reservadas com `re.sub` e executa o código traduzido com `exec` do Python.
+O Scanner implementado em `src/lexer.py` reconhece tokens e registra suas posições no código. Ele também reconhece as diretivas `#tunel`, `#toca` e `#vaparatunel` por uma regra específica. O Parser, em `src/parser.py`, usa esses tokens para montar a árvore do programa. O Executor, em `src/executor.py`, percorre essa árvore e executa as instruções.
 
 ### 5.4 Tratamento de erros léxicos
 
-Os exemplos de erro nos documentos de apoio fazem parte das simulações da proposta teórica.
+Quando encontra caracteres fora do alfabeto definido, o Scanner registra erros com linha e coluna e continua a leitura. Ao analisar um arquivo, o Parser interrompe a execução se houver erro léxico ou sintático.
 
 ## 6. Diagramas dos autômatos
 
@@ -122,15 +122,16 @@ Os modelos e as simulações estão em [AUTOMATA.md](AUTOMATA.md).
 
 ## 7. Testes e resultados
 
-Os casos disponíveis nos documentos de apoio são simulações da proposta teórica.
+O projeto contém testes automatizados para o Scanner e o Parser, além de testes de integração. Eles verificam o reconhecimento de tokens, a formação da árvore e a execução do programa.
 
 ## 8. Conclusão
 
-O relatório apresenta uma proposta teórica de análise léxica com tokens, expressões regulares e autômatos. O programa atual substitui palavras reservadas e executa o código traduzido com Python.
+O trabalho apresenta as regras léxicas e os autômatos do Rathyon. No programa atual, o Scanner, o Parser e o Executor formam o caminho usado para executar arquivos `.ra`. A especificação léxica continua em rascunho enquanto algumas decisões aguardam validação do grupo.
 
 ## 9. Referências
 
-- Projeto Rathyon. Código-fonte: `rathyon.py` e `config/palavras_reservadas.json`.
+- Projeto Rathyon. Código-fonte: `src/lexer.py`, `src/parser.py`, `src/executor.py` e `src/automata.py`.
+- Projeto Rathyon. Testes automatizados: `tests/`.
 - Projeto Rathyon. [Especificação léxica](SPECIFICATIONS.md).
 - Projeto Rathyon. [Autômatos](AUTOMATA.md).
 - Projeto Rathyon. [Expressões regulares](REGULAR_EXPRESSIONS.md).
