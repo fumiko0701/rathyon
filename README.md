@@ -62,7 +62,7 @@
 - **Comparação:** `==  !=  <  >  <=  >=`
 - **Atribuição:** `=`
 - **Strings:** use aspas duplas; escapes como `\n`, `\t`, `\\` e `\"` são aceitos.
-- **Comentários:** ainda não são aceitos pelo interpretador.
+- **Comentários:** a linguagem permite comentários de linha iniciados por `//`. Todo o conteúdo após esse marcador é ignorado pelo Scanner até o final da linha. A quebra de linha continua sendo processada normalmente.
 
 ### Regiões
 

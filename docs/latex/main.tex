@@ -127,9 +127,13 @@ Autômatos finitos são modelos matemáticos utilizados para reconhecer linguage
 Foram reunidas as palavras e os símbolos previstos para a linguagem. Depois, foram definidos padrões para os tokens e implementados reconhecedores por meio de autômatos. Os testes do projeto verificam o Scanner, o Parser e casos de integração.
 \section{Desenvolvimento do Scanner}
 \subsection{Especificação da Linguagem e Categorias de Tokens}
+
 A proposta considera palavras reservadas, identificadores, números inteiros e decimais, strings entre aspas duplas, operadores e delimitadores. Colchetes são delimitadores usados em listas.
 
+A linguagem também permite comentários de linha iniciados por \texttt{//}. O Scanner ignora todo o conteúdo após esse marcador até o final da linha, sem consumir a quebra de linha.
+
 A lista completa e as decisões pendentes estão em \href{../markdown/SPECIFICATIONS.md}{SPECIFICATIONS.md}.
+
 \subsection{Modelagem Matemática e Expressões Regulares}
 Os padrões e as tabelas dos autômatos estão descritos em \href{../markdown/REGULAR_EXPRESSIONS.md}{expressões regulares} e \href{../markdown/AUTOMATA.md}{autômatos}.
 
