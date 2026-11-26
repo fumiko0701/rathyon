@@ -369,4 +369,3 @@ Palavras reservadas não têm AFD próprio: o scanner lê o identificador comple
 - [ ] Avisar o grupo da correção do INTEGER (2 estados).
 - [ ] Decidir D03 e D04 (token das diretivas e resto da linha) em SPECIFICATIONS.md.
 - [ ] Aprovar as 11 palavras acrescentadas depois das 13 do PDF (4 em D02 e 7 sem decisão registrada) e manter K igual em todos os documentos.
-- [ ] Comentários: o Scanner ainda não os aceita. Se forem implementados, formalizar o reconhecedor (nova categoria ou descarte) neste arquivo.

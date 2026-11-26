@@ -23,5 +23,7 @@
   "range": "trilha",
   "region": "tunel",
   "endregion": "toca",
-  "goto": "vaparatunel"
+  "goto": "vaparatunel",
+  "switch": "cace",
+  "case": "presa" 
 }
