@@ -99,6 +99,7 @@ Os resultados abaixo seguem o scanner (maximal munch e regras 6 a 8 da especific
 | `007` | q₀ -0→ q₁ -0→ q₁ -7→ q₁ | INTEGER |
 | `3.14` | q₀ -3→ q₁ -.→ q₂ -1→ q₃ -4→ q₃ | FLOAT |
 | `5.` | q₀ -5→ q₁ -.→ q₂ (não final) | INTEGER `5` + erro em `.` |
+| `5.abc` | q₀ -5→ q₁; o `.` seguido de letra vira delimitador | INTEGER `5`, DELIMITER `.`, IDENTIFIER `abc` |
 | `.5` | q₀ -.→ q_d | erro em `.` + INTEGER `5` |
 | `9.8.7` | q₀ -9→ q₁ -.→ q₂ -8→ q₃ -.→ q_d | FLOAT `9.8` + erro em `.` + INTEGER `7` |
 | `123abc` | q₀ -1→ q₁ -2→ q₁ -3→ q₁, `a` ∉ Σ | erro único (regra 6) |
@@ -129,7 +130,7 @@ K é um conjunto finito, logo regular, com **24 palavras**. Elas não têm AFD p
 | `list` | `ninho` | `continue` | `seguir` |
 | `switch` | `cace` | `case` | `presa` |
 
-`vasculhar`, `dentro`, `cavar` e `trilha` vêm do `teste.ra` e dependem da decisão D02. Todas as palavras são lidas por inteiro antes da consulta ao conjunto K.
+`vasculhar`, `dentro`, `cavar` e `trilha` vêm do `teste.ra` e dependem da decisão D02. As sete palavras das quatro últimas linhas da tabela (`procure`, `barriga`, `chiado`, `ninho`, `seguir`, `cace` e `presa`) vieram da evolução do Scanner e não constam de D02. Todas as palavras são lidas por inteiro antes da consulta ao conjunto K.
 
 ```text
 se lexema ∈ K → KEYWORD
@@ -168,7 +169,7 @@ Os dois AFDs têm a mesma forma, com `Q = {q₀, q_f, q_d}` e `F = {q_f}`:
 - **Aritméticos:** Σ = {+, -, *, /}. Categoria ARITHMETIC_OPERATOR.
 - **Delimitadores:** Σ = {(, ), {, }, [, ], ;, ,, .}. Categoria DELIMITER.
 
-Strings são reconhecidas caractere a caractere, fora dos AFDs desta tabela. Aspas duplas delimitam o lexema; escapes JSON são permitidos e a quebra de linha encerra uma string sem fechamento. O ponto é delimitador em `modulo.funcao` e continua compondo números decimais.
+Strings são reconhecidas caractere a caractere, fora dos AFDs desta tabela. Aspas duplas delimitam o lexema; escapes JSON são permitidos e a quebra de linha encerra uma string sem fechamento. O ponto é delimitador quando vem logo antes de letra ou `_` (`modulo.funcao`); nos demais casos segue o reconhecimento numérico, e `5.` ou `.5` geram erro no ponto. Por isso `5.abc` gera INTEGER `5`, DELIMITER `.` e IDENTIFIER `abc`, sem erro.
 
 ### 4.3 Simulações
 
@@ -358,7 +359,7 @@ Os 6 pares ficam marcados e não há fusão.
 | Palavra de diretiva (M_DIR) | 4 | 4 | Já mínimo |
 | Nome de região (M_NOME) | 3 | 3 | Já mínimo |
 
-Palavras reservadas não têm AFD próprio: o scanner lê o identificador completo e consulta o conjunto K (17 palavras, seção 3.5).
+Palavras reservadas não têm AFD próprio: o scanner lê o identificador completo e consulta o conjunto K (24 palavras, seção 3.5).
 
 ## 6. Pendências
 
@@ -367,4 +368,5 @@ Palavras reservadas não têm AFD próprio: o scanner lê o identificador comple
 - [ ] Reconferir a seção 3.4 contra os casos finais do T11.
 - [ ] Avisar o grupo da correção do INTEGER (2 estados).
 - [ ] Decidir D03 e D04 (token das diretivas e resto da linha) em SPECIFICATIONS.md.
-- [ ] Aprovar as 4 palavras novas (`vasculhar`, `dentro`, `cavar`, `trilha`) e atualizar K em todos os documentos.
+- [ ] Aprovar as 11 palavras acrescentadas depois das 13 do PDF (4 em D02 e 7 sem decisão registrada) e manter K igual em todos os documentos.
+- [ ] Comentários: o Scanner ainda não os aceita. Se forem implementados, formalizar o reconhecedor (nova categoria ou descarte) neste arquivo.

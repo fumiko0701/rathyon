@@ -22,7 +22,7 @@ Convenções:
 | `a*` | Fecho de Kleene: zero ou mais repetições |
 | `a+` | Uma ou mais repetições, equivalente a `aa*` |
 
-Nas expressões abaixo, os caracteres dos operadores e delimitadores representam os símbolos literais da linguagem. O ponto de FLOAT representa o caractere `.`.
+Nas expressões abaixo, os caracteres dos operadores e delimitadores representam os símbolos literais da linguagem. O ponto de FLOAT representa o caractere `.`. O ponto de DELIMITER só vale quando o caractere seguinte é letra ou `_`.
 
 ## 3. Expressões regulares
 
@@ -41,7 +41,7 @@ RELATIONAL = == | != | >= | <= | > | <
 
 ASSIGNMENT = =
 
-DELIMITER = ( | ) | { | } | [ | ] | ; | , | . (acesso a módulo)
+DELIMITER = ( | ) | { | } | [ | ] | ; | , | .   (o ponto só se o próximo caractere for letra ou _)
 
 STRING = aspas_duplas (caractere imprimível, exceto aspas e barra_invertida | escape_JSON)* aspas_duplas
 
@@ -97,7 +97,7 @@ Reconhece o símbolo de atribuição `=`.
 
 ### 4.7 DELIMITER
 
-Reconhece um dos delimitadores: `(`, `)`, `{`, `}`, `[`, `]`, `;`, `,` ou `.` antes de um nome de módulo ou membro.
+Reconhece um dos delimitadores: `(`, `)`, `{`, `}`, `[`, `]`, `;`, `,` ou `.` quando o caractere seguinte é letra ou `_` (acesso a módulo, como `math.sqrt`). O ponto seguido de dígito, espaço ou fim de texto não é delimitador e gera erro.
 
 ### 4.8 KEYWORD
 
@@ -171,7 +171,7 @@ Nesta tabela, “rejeitado” significa que a entrada inteira não corresponde a
 | ARITHMETIC | `+`, `-`, `*`, `/` | `=`, `>=`, `++` |
 | RELATIONAL | `==`, `!=`, `>=`, `<=`, `>`, `<` | `!`, `=`, `=<` |
 | ASSIGNMENT | `=` | `==`, `!=`, `=<` |
-| DELIMITER | `(`, `)`, `{`, `}`, `[`, `]`, `;`, `,` | `.`, `_`, `()` |
+| DELIMITER | `(`, `)`, `{`, `}`, `[`, `]`, `;`, `,`, `.` (antes de letra, como em `a.b`) | `.` seguido de dígito ou espaço (`.5`), `_`, `()` |
 | KEYWORD | `farejar`, `refarejar`, `cheio`, `vazio`, `barriga`, `chiado`, `ninho`, `seguir`, `cace`, `presa` | `Farejar`, `farejares`, `_rato1` |
 
 Embora `farejar` corresponda à expressão de IDENTIFIER, sua classificação final é KEYWORD devido à consulta ao conjunto K.
@@ -194,6 +194,12 @@ Os resultados abaixo seguem as regras da especificação original.
 | `5.` | INTEGER `5` e erro no ponto |
 | `.5` | Erro no ponto e INTEGER `5` |
 | `9.8.7` | FLOAT `9.8`, erro no segundo ponto e INTEGER `7` |
+| `5.abc` | INTEGER `5`, DELIMITER `.` e IDENTIFIER `abc`, sem erro |
+| `math.sqrt` | IDENTIFIER `math`, DELIMITER `.` e IDENTIFIER `sqrt` |
+| `x.5` | IDENTIFIER `x`, erro no ponto e INTEGER `5` |
+| `"ola"` | STRING |
+| `"abc` | Erro de string sem fechamento, consumindo até o fim da linha |
+| `"a\qb"` | Erro de escape inválido, consumindo a string inteira |
 | `>=` | RELATIONAL_OPERATOR, em um único token |
 | `=<` | ASSIGNMENT `=` e RELATIONAL_OPERATOR `<` |
 | `!` | Erro léxico |

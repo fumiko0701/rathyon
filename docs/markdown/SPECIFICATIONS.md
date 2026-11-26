@@ -21,7 +21,7 @@ Este arquivo contém apenas a T01. As regras seguem o PDF e têm status **PROPOS
 | Símbolos | `+`, `-`, `*`, `/`, `=`, `!`, `<`, `>`, `(`, `)`, `{`, `}`, `[`, `]`, `;`, `,`, `.`, `_`, `#` |
 | Separadores | Espaço, tabulação e quebra de linha (`\n`) |
 
-O alfabeto `Σ` reúne esses quatro grupos. Separadores não geram tokens. `!` e `.` pertencem ao alfabeto, mas não são tokens isolados. `#` só é válido no início de uma diretiva de região (seção 3.1); em qualquer outro uso é erro. Strings usam aspas duplas e aceitam caracteres Unicode imprimíveis e escapes JSON na mesma linha.
+O alfabeto `Σ` reúne esses quatro grupos. Separadores não geram tokens. `!` isolado é erro. O `.` só forma token sozinho (DELIMITER) quando vem logo antes de letra ou `_`, como em `math.sqrt`; nos demais casos aparece apenas dentro de um `FLOAT`. `#` só é válido no início de uma diretiva de região (seção 3.1); em qualquer outro uso é erro. Strings usam aspas duplas e aceitam caracteres Unicode imprimíveis e escapes JSON na mesma linha.
 
 ## 3. Categorias de tokens
 
@@ -92,11 +92,12 @@ Confirmadas no PDF, mas ainda **PROPOSTAS** para aprovação do grupo:
 2. **Palavras reservadas:** ler a palavra inteira e consultar `K`. `farejar` é `KEYWORD`; `farejares` é `IDENTIFIER`.
 3. **Maiúsculas:** fazem diferença. `Farejar` é `IDENTIFIER`.
 4. **Inteiros:** têm um ou mais dígitos. Zeros à esquerda são aceitos: `007` é `INTEGER`.
-5. **Decimais:** exigem dígitos antes e depois do ponto. `3.14` é `FLOAT`; `5.` e `.5` não são.
+5. **Decimais e ponto:** exigem dígitos antes e depois do ponto. `3.14` é `FLOAT`; `5.` e `.5` não são. Um `.` seguido de letra ou `_` é `DELIMITER` (acesso a módulo) e nunca faz parte de número.
 6. **Menos:** `-` é sempre operador. `-5` gera operador `-` e inteiro `5`.
 7. **Maior casamento (maximal munch):** escolher o maior trecho aceito, guardando o último estado final. `>=` gera um único token.
 8. **Posição:** ignorar separadores na saída, mas registrar linha e coluna de tokens e erros.
 9. **Erros:** caracteres fora de `Σ`, como `@`, `!` isolado e diretivas desconhecidas ou sem nome geram erro. A leitura continua depois deles.
+10. **Strings:** começam e terminam em aspas duplas, na mesma linha. Quebra de linha antes do fechamento gera erro de string sem fechamento. Escape inválido, escape `\u` incompleto e caractere de controle (como tabulação) dentro da string geram erro; cada erro consome o lexema inteiro, até o fechamento ou o fim da linha.
 
 As regras numéricas abaixo estão **PENDENTES** de confirmação:
 
@@ -106,6 +107,9 @@ As regras numéricas abaixo estão **PENDENTES** de confirmação:
 | `5.` | `INTEGER("5")` e erro no ponto |
 | `.5` | Erro no ponto e `INTEGER("5")` |
 | `9.8.7` | `FLOAT("9.8")`, erro no segundo ponto e `INTEGER("7")` |
+| `5.abc` | `INTEGER("5")`, `DELIMITER(".")` e `IDENTIFIER("abc")`, sem erro |
+| `math.sqrt` | `IDENTIFIER("math")`, `DELIMITER(".")` e `IDENTIFIER("sqrt")` |
+| `x.5` | `IDENTIFIER("x")`, erro no ponto e `INTEGER("5")` |
 
 O erro único de `123abc` é uma regra especial: apenas reconhecer os tokens válidos pelo maior casamento não basta para produzir esse resultado.
 
