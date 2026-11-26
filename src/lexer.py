@@ -56,7 +56,7 @@ class Scanner:
         """Percorre todo o texto-fonte e devolve (tokens, erros).
 
         - Separadores são pulados (não aparecem na saída).
-        - Comentários iniciados por // são ignorados até o fim da linha.
+        - Comentários iniciados por # são ignorados até o fim da linha.
         - Cada caractere restante é enviado ao reconhecedor de sua classe.
         - O maior prefixo aceito (maximal munch) é emitido como um Token.
         - Caracteres inválidos ou construções rejeitadas viram ErroLexico e a

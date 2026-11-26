@@ -1,6 +1,7 @@
+```latex
 \documentclass[12pt,a4paper]{article}
 
-%pacotes necessários
+% Pacotes necessários
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[brazilian]{babel}
@@ -17,17 +18,18 @@
 \input{glyphtounicode}
 \pdfgentounicode=1
 
-%margens 
+% Margens
 \geometry{
-    left= 3cm,
-    right= 2cm,
-    top= 3cm,
-    bottom= 2cm
+    left=3cm,
+    right=2cm,
+    top=3cm,
+    bottom=2cm
 }
 
 \begin{document}
 \hypersetup{pageanchor=false}
-%capa
+
+% Capa
 \begin{titlepage}
 \centering
 
@@ -50,9 +52,11 @@ Pedro Artur Rolemberg Ferreira Nogueira - 01705061\\
 {\large 2026}
 
 \end{titlepage}
+
 \hypersetup{pageanchor=true}
 \pagenumbering{roman}
-%sumário
+
+% Sumário
 \tableofcontents
 \clearpage
 \pagenumbering{arabic}
@@ -68,108 +72,174 @@ No âmbito técnico, o relatório apresenta os conceitos e as regras do analisad
 
 Na execução de arquivos \texttt{.ra}, o programa usa Scanner, Parser e Executor. O console interativo segue um caminho separado e traduz algumas palavras para Python. O relatório aborda linguagens formais, expressões regulares e autômatos usados no Scanner.
 
+
 \section{Objetivos}
 
 Desenvolver e documentar a especificação de um analisador léxico (Scanner) para uma linguagem de programação temática, utilizando linguagens formais, expressões regulares e autômatos finitos determinísticos para reconhecer e classificar os elementos léxicos.
 
 \subsection{Objetivo Geral}
-\begin{itemize}
 
+\begin{itemize}
     \item Definir o alfabeto e as categorias de tokens da linguagem;
     \item Estabelecer expressões regulares para representar os padrões léxicos;
     \item Modelar autômatos finitos determinísticos para o reconhecimento de identificadores, números e operadores;
-    \item Descrever o processo de identificação e classificação dos lexemas; 
+    \item Descrever o processo de identificação e classificação dos lexemas;
     \item Aplicar a estratégia de maior casamento (\textit{maximal munch}) durante o reconhecimento dos tokens;
     \item Especificar mecanismos para identificação e tratamento de erros léxicos;
     \item Documentar as simulações da proposta de Scanner.
-
 \end{itemize}
 
-    
+
 \subsection{Objetivos Específicos}
+
 \begin{itemize}
-\item Definir as categorias de tokens da linguagem.
-\item Representar os padrões com expressões regulares e autômatos.
-\item Descrever o tratamento de erros léxicos.
+    \item Definir as categorias de tokens da linguagem;
+    \item Representar os padrões com expressões regulares e autômatos;
+    \item Descrever o tratamento de erros léxicos.
 \end{itemize}
+
 
 \section{Fundamentação Teórica}
+
 \subsection{Compiladores e Análise Léxica}
+
 Um compilador é um programa responsável por traduzir um código escrito em uma linguagem de programação para outra representação, geralmente uma linguagem de máquina ou uma forma intermediária. Esse processo é dividido em etapas, que analisam diferentes aspectos do código-fonte.
 
-A análise léxica é uma das primeiras etapas desse processo. Sua responsabilidade é percorrer o código fonte, identificar sequências de caracteres que formam unidades significativas e classificá-las em categorias denominadas tokens.
+A análise léxica é uma das primeiras etapas desse processo. Sua responsabilidade é percorrer o código-fonte, identificar sequências de caracteres que formam unidades significativas e classificá-las em categorias denominadas tokens.
 
-O componente responsável por essa atividade é chamado de analisador léxico ou scanner. Além de reconhecer os elementos válidos da linguagem, ele também pode identificar caracteres inválidos e informar a ocorrência de erros léxicos.
+O componente responsável por essa atividade é chamado de analisador léxico ou Scanner. Além de reconhecer os elementos válidos da linguagem, ele também pode identificar caracteres inválidos e informar a ocorrência de erros léxicos.
+
 
 \subsection{Tokens e Lexemas}
 
-Token é a classificação atribuída a uma unidade reconhecida durante a análise léxica. Já o lexema corresponde à sequência de caracteres presentes no código-fonte que representa determinado token. 
+Token é a classificação atribuída a uma unidade reconhecida durante a análise léxica. Já o lexema corresponde à sequência de caracteres presentes no código-fonte que representa determinado token.
 
-Por exemplo, considerando a instrução
+Por exemplo, considerando a instrução:
 
 \begin{lstlisting}
-    roer queijo = 18;
+roer queijo = 18;
 \end{lstlisting}
 
-Na proposta, a instrução abaixo seria dividida nos lexemas \texttt{roer}, \texttt{queijo}, \texttt{=}, \texttt{18} e \texttt{;}, cada um associado à sua categoria léxica.
+Na proposta, a instrução acima seria dividida nos lexemas \texttt{roer}, \texttt{queijo}, \texttt{=}, \texttt{18} e \texttt{;}, cada um associado à sua categoria léxica.
+
 
 \subsection{Expressões Regulares}
 
 Expressões regulares são representações formais utilizadas para descrever padrões de cadeias de caracteres. Elas permitem definir quais sequências pertencem a determinadas linguagens regulares.
 
-No desenvolvimento do Scanner, as expressões regulares são utilizadas para especificar os padrões de reconhecimento dos tokens, como identificadores, números inteiros, números decimais e operadores. 
+No desenvolvimento do Scanner, as expressões regulares são utilizadas para especificar os padrões de reconhecimento dos tokens, como identificadores, números inteiros, números decimais e operadores.
+
 
 \subsection{Autômatos Finitos}
 
-Autômatos finitos são modelos matemáticos utilizados para reconhecer linguagens regulares. Um autômato finito determinístico é definido por um conjunto de estados, um alfabeto, uma função de transição, um estado inicial e um conjunto de estados finais. 
+Autômatos finitos são modelos matemáticos utilizados para reconhecer linguagens regulares. Um autômato finito determinístico é definido por um conjunto de estados, um alfabeto, uma função de transição, um estado inicial e um conjunto de estados finais.
+
 
 \section{Metodologia}
+
 Foram reunidas as palavras e os símbolos previstos para a linguagem. Depois, foram definidos padrões para os tokens e implementados reconhecedores por meio de autômatos. Os testes do projeto verificam o Scanner, o Parser e casos de integração.
+
+
 \section{Desenvolvimento do Scanner}
+
 \subsection{Especificação da Linguagem e Categorias de Tokens}
 
 A proposta considera palavras reservadas, identificadores, números inteiros e decimais, strings entre aspas duplas, operadores e delimitadores. Colchetes são delimitadores usados em listas.
 
-A linguagem também permite comentários de linha iniciados por \texttt{//}. O Scanner ignora todo o conteúdo após esse marcador até o final da linha, sem consumir a quebra de linha.
+A linguagem também permite comentários de linha iniciados por \texttt{//}. O Scanner ignora todo o conteúdo após esse marcador até o final da linha, sem consumir a quebra de linha, que continua sendo processada normalmente como separador.
 
 A lista completa e as decisões pendentes estão em \href{../markdown/SPECIFICATIONS.md}{SPECIFICATIONS.md}.
 
+
 \subsection{Modelagem Matemática e Expressões Regulares}
+
 Os padrões e as tabelas dos autômatos estão descritos em \href{../markdown/REGULAR_EXPRESSIONS.md}{expressões regulares} e \href{../markdown/AUTOMATA.md}{autômatos}.
 
 Um identificador segue o padrão \texttt{(L|\_)(L|D|\_)*}, em que L representa uma letra e D, um dígito.
 
+
 \subsection{Implementação e Funcionamento do Scanner}
 
-O Scanner implementado em \texttt{src/lexer.py} reconhece tokens e registra suas posições no código. Strings são reconhecidas por uma regra própria, com aspas duplas e escapes definidos na especificação. Ele também reconhece as diretivas \texttt{\#tunel}, \texttt{\#toca} e \texttt{\#vaparatunel} por uma regra específica. O Parser, em \texttt{src/parser.py}, usa esses tokens para montar a árvore do programa. O Executor, em \texttt{src/executor.py}, percorre essa árvore e executa as instruções.
+O Scanner implementado em \texttt{src/lexer.py} reconhece tokens e registra suas posições no código. Strings são reconhecidas por uma regra própria, com aspas duplas e escapes definidos na especificação.
+
+Os comentários de linha iniciados por \texttt{//} são ignorados durante a leitura, sem gerar tokens. A quebra de linha não é consumida pelo mecanismo de reconhecimento dos comentários, permitindo que o Scanner continue processando normalmente os separadores.
+
+O Scanner também reconhece as diretivas \texttt{\#tunel}, \texttt{\#toca} e \texttt{\#vaparatunel} por uma regra específica. Essas diretivas são utilizadas para organizar regiões do programa e realizar saltos entre elas.
+
+O Parser, em \texttt{src/parser.py}, utiliza os tokens produzidos pelo Scanner para montar a árvore sintática do programa. O Executor, em \texttt{src/executor.py}, percorre essa árvore e executa as instruções.
+
+
+\subsection{Refatoração do Scanner e do Executor}
+
+Durante a evolução do projeto, foram realizadas refatorações nos módulos do Scanner e do Executor, com o objetivo de reduzir a repetição de código, melhorar a organização interna e otimizar o processamento dos programas.
+
+\subsubsection{Refatoração do Scanner}
+
+No Scanner, foi implementada uma tabela fixa de classes de caracteres, responsável por classificar os símbolos da entrada e facilitar o direcionamento para os reconhecedores correspondentes.
+
+Também foi desenvolvido um reconhecedor genérico, denominado \texttt{\_simples}, para processar construções de reconhecimento semelhantes, permitindo reutilizar a lógica de identificação de diferentes categorias de tokens.
+
+Além disso, o despacho dos reconhecedores passou a ser realizado com base na classe do caractere atual. Essa abordagem reduziu a repetição de estruturas condicionais e tornou o processo de reconhecimento léxico mais organizado.
+
+\subsubsection{Refatoração do Executor}
+
+No Executor, o despacho dos nós e das expressões da árvore sintática passou a utilizar a função \texttt{getattr}, permitindo localizar dinamicamente os métodos responsáveis pelo processamento de cada tipo de construção.
+
+Também foi adotado um mapa de operadores, evitando a criação de funções lambda a cada avaliação de expressão e centralizando a associação entre operadores e suas respectivas operações.
+
+A lógica de gerenciamento de regiões e da diretiva \texttt{\#vaparatunel} foi unificada, reduzindo a duplicação de código responsável pelo controle dos saltos entre regiões.
+
+Por fim, o gerenciamento de escopos de funções e eventos passou a utilizar um único mecanismo, padronizando o controle do contexto de execução.
+
+Essas modificações contribuíram para simplificar a estrutura interna dos módulos, reduzir a duplicação de código e tornar a implementação mais organizada e eficiente.
+
 
 \subsection{Tratamento de Erros Léxicos}
 
 Quando encontra caracteres fora do alfabeto definido, o Scanner registra erros com linha e coluna e continua a leitura. Ao analisar um arquivo, o Parser interrompe a execução se houver erro léxico ou sintático.
 
+
 \section{Diagramas dos Autômatos}
+
 As tabelas de transição e simulações dos modelos propostos estão em \href{../markdown/AUTOMATA.md}{AUTOMATA.md}.
+
 \subsection{AFD de Identificadores}
+
 O modelo e as simulações estão em \href{../markdown/AUTOMATA.md}{AUTOMATA.md}.
+
 \subsection{AFD de Números}
+
 O modelo e as simulações estão em \href{../markdown/AUTOMATA.md}{AUTOMATA.md}.
+
 \subsection{AFD de Operadores Relacionais e Atribuição}
-Os modelos e as simulações estão em \href{../markdown/AUTOMATA.md}{AUTOMATA.md}.
-\subsection{AFDs de Operadores Aritméticos e Delimitadores}
+
 Os modelos e as simulações estão em \href{../markdown/AUTOMATA.md}{AUTOMATA.md}.
 
+\subsection{AFDs de Operadores Aritméticos e Delimitadores}
+
+Os modelos e as simulações estão em \href{../markdown/AUTOMATA.md}{AUTOMATA.md}.
+
+
 \section{Testes e Resultados}
+
 O projeto contém testes automatizados para o Scanner e o Parser, além de testes de integração. Eles verificam o reconhecimento de tokens, a formação da árvore e a execução do programa.
+
+
 \section{Conclusão}
+
 O trabalho apresenta as regras léxicas e os autômatos do Rathyon. No programa atual, o Scanner, o Parser e o Executor formam o caminho usado para executar arquivos \texttt{.ra}. A especificação léxica continua em rascunho enquanto algumas decisões aguardam validação do grupo.
+
+
 \section{Referências}
+
 \begin{itemize}
-\item Projeto Rathyon. Código-fonte: \texttt{src/lexer.py}, \texttt{src/parser.py}, \texttt{src/executor.py} e \texttt{src/automata.py}.
-\item Projeto Rathyon. Testes automatizados: diretório \texttt{tests/}.
-\item Projeto Rathyon. Especificação léxica: \href{../markdown/SPECIFICATIONS.md}{SPECIFICATIONS.md}.
-\item Projeto Rathyon. Autômatos e expressões regulares: \href{../markdown/AUTOMATA.md}{autômatos} e \href{../markdown/REGULAR_EXPRESSIONS.md}{expressões regulares}.
-\item Projeto Rathyon. Gramática: \href{../markdown/grammar.md}{grammar.md}.
+    \item Projeto Rathyon. Código-fonte: \texttt{src/lexer.py}, \texttt{src/parser.py}, \texttt{src/executor.py} e \texttt{src/automata.py}.
+    \item Projeto Rathyon. Testes automatizados: diretório \texttt{tests/}.
+    \item Projeto Rathyon. Especificação léxica: \href{../markdown/SPECIFICATIONS.md}{SPECIFICATIONS.md}.
+    \item Projeto Rathyon. Autômatos e expressões regulares: \href{../markdown/AUTOMATA.md}{autômatos} e \href{../markdown/REGULAR_EXPRESSIONS.md}{expressões regulares}.
+    \item Projeto Rathyon. Gramática: \href{../markdown/grammar.md}{grammar.md}.
 \end{itemize}
 
 
 \end{document}
+```

@@ -15,7 +15,7 @@ Sintaxe implementada conforme a proposta recebida:
 - listas: [expressao, ...], com acesso por indice;
 - selecao: cace expressao { presa valor { ... } fujir { ... } }.
 
-Comentários de linha iniciados por // são aceitos pelo Scanner oficial.
+Comentários de linha iniciados por # são aceitos pelo Scanner oficial.
 A gramática sintática completa continua sendo uma proposta e depende de
 validação do grupo.
 """
