@@ -1,7 +1,7 @@
 # Autômatos da Linguagem do Rato
 
 AFDs do Scanner: formalização, simulações e minimização (T04, T05 e T06).
-Base: Especificação Léxica v1.0, seções 4 a 6. Nenhuma regra léxica foi alterada.
+Strings usam um reconhecedor próprio; colchetes e o ponto de acesso a módulo foram acrescentados aos delimitadores.
 
 ## 1. Convenções
 
@@ -25,7 +25,7 @@ As diretivas de região (`#tunel`, `#toca`, `#vaparatunel`) estão formalizadas 
 | Números combinados | {q₀, q₁, q₂, q₃, q_d} | D ∪ {.} | {q₁, q₃} |
 | Atribuição e relacionais | {q₀, …, q₈, q_d} | {=, !, <, >} | {q₁, q₂, q₄, q₅, q₆, q₇, q₈} |
 | Aritméticos | {q₀, q_f, q_d} | {+, -, *, /} | {q_f} |
-| Delimitadores | {q₀, q_f, q_d} | {(, ), {, }, ;, ,} | {q_f} |
+| Delimitadores | {q₀, q_f, q_d} | {(, ), {, }, [, ], ;, ,, .} | {q_f} |
 | Palavra de diretiva (M_DIR) | {q₀, q₁, q₂, q_d} | {#} ∪ L ∪ {_} | {q₂} |
 | Nome de região (M_NOME) | {p₀, p₁, q_d} | L ∪ D ∪ {_, espaço, tab} | {p₁} |
 
@@ -111,7 +111,7 @@ Conferência com a especificação (seção 7, base do T11): sem divergências. 
 
 ### 3.5 Palavras reservadas (conjunto K)
 
-K é um conjunto finito, logo regular, com **17 palavras**. Elas não têm AFD próprio: o scanner lê o identificador inteiro pelo AFD da seção 3.1 e depois consulta K (`K ⊂ L(IDENTIFIER)`).
+K é um conjunto finito, logo regular, com **24 palavras**. Elas não têm AFD próprio: o scanner lê o identificador inteiro pelo AFD da seção 3.1 e depois consulta K (`K ⊂ L(IDENTIFIER)`).
 
 | Equivalente | Palavra | Equivalente | Palavra |
 |---|---|---|---|
@@ -124,8 +124,12 @@ K é um conjunto finito, logo regular, com **17 palavras**. Elas não têm AFD p
 | `False` | `vazio` | `for` | `vasculhar` |
 | `in` | `dentro` | `def` | `cavar` |
 | `range` | `trilha` | | |
+| `import` | `procure` | | |
+| `bool` | `barriga` | `str` | `chiado` |
+| `list` | `ninho` | `continue` | `seguir` |
+| `switch` | `cace` | `case` | `presa` |
 
-As quatro últimas palavras (`vasculhar`, `dentro`, `cavar`, `trilha`) vêm do `teste.ra` e são **PROPOSTA** até o grupo aprovar. Todas são minúsculas e sem acento, e nenhuma é prefixo de outra de forma que atrapalhe o maximal munch, pois a palavra é lida inteira antes da consulta.
+`vasculhar`, `dentro`, `cavar` e `trilha` vêm do `teste.ra` e dependem da decisão D02. Todas as palavras são lidas por inteiro antes da consulta ao conjunto K.
 
 ```text
 se lexema ∈ K → KEYWORD
@@ -162,7 +166,9 @@ Os dois AFDs têm a mesma forma, com `Q = {q₀, q_f, q_d}` e `F = {q_f}`:
 | q_d | q_d |
 
 - **Aritméticos:** Σ = {+, -, *, /}. Categoria ARITHMETIC_OPERATOR.
-- **Delimitadores:** Σ = {(, ), {, }, ;, ,}. Categoria DELIMITER.
+- **Delimitadores:** Σ = {(, ), {, }, [, ], ;, ,, .}. Categoria DELIMITER.
+
+Strings são reconhecidas caractere a caractere, fora dos AFDs desta tabela. Aspas duplas delimitam o lexema; escapes JSON são permitidos e a quebra de linha encerra uma string sem fechamento. O ponto é delimitador em `modulo.funcao` e continua compondo números decimais.
 
 ### 4.3 Simulações
 
@@ -175,7 +181,7 @@ Os dois AFDs têm a mesma forma, com `Q = {q₀, q_f, q_d}` e `F = {q_f}`:
 | `<=` | q₀ -<→ q₅ -=→ q₆ | RELATIONAL |
 | `>=` | q₀ -`>`→ q₇ -`=`→ q₈ | RELATIONAL |
 | `+` (também `-`, `*`, `/`) | q₀ -+→ q_f | ARITHMETIC_OPERATOR |
-| `;` (também `(`, `)`, `{`, `}`, `,`) | q₀ -;→ q_f | DELIMITER |
+| `;` (também `(`, `)`, `{`, `}`, `[`, `]`, `,`, `.` em acesso a módulo) | q₀ -;→ q_f | DELIMITER |
 | `@` | sem reconhecedor (∉ Σ) | erro léxico |
 
 ### 4.4 Maximal munch no scanner

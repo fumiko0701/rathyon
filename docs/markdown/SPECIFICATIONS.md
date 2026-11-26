@@ -18,10 +18,10 @@ Este arquivo contém apenas a T01. As regras seguem o PDF e têm status **PROPOS
 | --- | --- |
 | Letras `L` | `a` a `z` e `A` a `Z`, sem acento |
 | Dígitos `D` | `0` a `9` |
-| Símbolos | `+`, `-`, `*`, `/`, `=`, `!`, `<`, `>`, `(`, `)`, `{`, `}`, `;`, `,`, `.`, `_`, `#` |
+| Símbolos | `+`, `-`, `*`, `/`, `=`, `!`, `<`, `>`, `(`, `)`, `{`, `}`, `[`, `]`, `;`, `,`, `.`, `_`, `#` |
 | Separadores | Espaço, tabulação e quebra de linha (`\n`) |
 
-O alfabeto `Σ` reúne esses quatro grupos. Separadores não geram tokens. `!` e `.` pertencem ao alfabeto, mas não são tokens isolados. `#` só é válido no início de uma diretiva de região (seção 3.1); em qualquer outro uso é erro.
+O alfabeto `Σ` reúne esses quatro grupos. Separadores não geram tokens. `!` e `.` pertencem ao alfabeto, mas não são tokens isolados. `#` só é válido no início de uma diretiva de região (seção 3.1); em qualquer outro uso é erro. Strings usam aspas duplas e aceitam caracteres Unicode imprimíveis e escapes JSON na mesma linha.
 
 ## 3. Categorias de tokens
 
@@ -33,10 +33,11 @@ Um **token** é uma parte reconhecida do código, como um nome, número ou opera
 | `IDENTIFIER` | Nomes de variáveis, eventos e funções |
 | `INTEGER` | Inteiros sem sinal |
 | `FLOAT` | Decimais com ponto |
+| `STRING` | Texto entre aspas duplas |
 | `ARITHMETIC_OPERATOR` | `+`, `-`, `*`, `/` |
 | `RELATIONAL_OPERATOR` | `==`, `!=`, `>=`, `<=`, `>`, `<` |
 | `ASSIGNMENT` | `=` |
-| `DELIMITER` | `(`, `)`, `{`, `}`, `;`, `,` |
+| `DELIMITER` | `(`, `)`, `{`, `}`, `[`, `]`, `;`, `,`, `.` em acesso a módulo |
 
 ### 3.1 Diretivas de região
 
@@ -52,7 +53,7 @@ Linha e coluna do token apontam para o `#`. `#` seguido de palavra fora de `D`, 
 
 ## 4. Palavras reservadas — conjunto K
 
-As 17 palavras abaixo são `KEYWORD` na proposta atual. As 13 primeiras vêm do PDF; as 4 últimas (`vasculhar`, `dentro`, `trilha`, `cavar`) foram acrescentadas a partir do `teste.ra` e dependem da decisão D02. A categoria de `cheio` e `vazio` ainda será confirmada (D01).
+As 24 palavras abaixo são `KEYWORD` no Scanner atual. `cheio` e `vazio` são valores booleanos; `barriga` nomeia o tipo Boolean. `queijo` e `migalha` mantêm os tipos inteiro e decimal.
 
 | Palavra | Referência |
 | --- | --- |
@@ -69,10 +70,17 @@ As 17 palavras abaixo são `KEYWORD` na proposta atual. As 13 primeiras vêm do 
 | `sinalizar` | `emit` — disparar evento |
 | `cheio` | `true` |
 | `vazio` | `false` |
+| `barriga` | Tipo `bool` |
+| `chiado` | Tipo `string` |
+| `ninho` | Tipo `list` |
 | `vasculhar` | `for` — D02 |
 | `dentro` | `in` — D02 |
 | `trilha` | `range` — D02 |
 | `cavar` | `def` — D02 |
+| `procure` | `import` |
+| `seguir` | `continue` |
+| `cace` | `switch` |
+| `presa` | `case` |
 
 A grafia `fujir` foi mantida conforme o PDF. As referências explicam os nomes; não definem como os comandos serão executados.
 
@@ -101,19 +109,30 @@ As regras numéricas abaixo estão **PENDENTES** de confirmação:
 
 O erro único de `123abc` é uma regra especial: apenas reconhecer os tokens válidos pelo maior casamento não basta para produzir esse resultado.
 
-Comentários e strings não estão previstos na proposta inicial; confirmar esse limite na seção 6.
+Comentários seguem fora da especificação atual. Strings entre aspas duplas são reconhecidas; os escapes aceitos são `\\`, `\"`, `\/`, `\b`, `\f`, `\n`, `\r`, `\t` e `\u` seguido de quatro dígitos hexadecimais.
 
-## 6. Decisões pendentes
+## 6. Tipos, funções e estruturas de controle
+
+- Declarações de variável: `queijo` (inteiro), `migalha` (decimal), `barriga` (booleano), `chiado` (string) e `ninho` (lista).
+- Valores booleanos: `cheio` e `vazio`.
+- Listas usam `[...]`, podem conter expressões, aceitam acesso e atribuição por índice e podem ser percorridas com `vasculhar ... dentro ...`.
+- Parâmetros tipados usam o tipo antes do nome, por exemplo `cavar somar(queijo a, queijo b) { ... }`. O tipo de retorno opcional aparece depois de `cavar`: `cavar queijo somar(...) { ... }`.
+- Assinaturas tipadas validam quantidade e tipos dos argumentos; funções sem anotações continuam aceitas. Chamadas mantêm a forma `somar(a, b)`.
+- `procure math;` importa um módulo Python, acessado por expressões como `math.sqrt(4)`.
+- `seguir;` passa à próxima iteração de `roer` ou `vasculhar`. `escapar;` continua encerrando laços.
+- `cace expressão { presa valor { ... } fujir { ... } }` executa o primeiro caso correspondente. `fujir` é opcional e funciona como padrão; não há queda entre casos.
+
+## 7. Decisões pendentes
 
 Todas aguardam resposta do grupo. Quando uma decisão for tomada, registrar nesta seção a data, a resposta, a justificativa, quem validou e as regras afetadas.
 
-### D01 — cheio e vazio
+### D01 — classificação de cheio e vazio
 
-- **Alternativas:** manter `KEYWORD` ou criar `BOOLEAN`.
+- **Definição atual:** `cheio` e `vazio` são valores `KEYWORD`; `barriga` é o tipo Boolean.
 
 ### D02 — palavras acrescentadas pelo teste.ra
 
-- **Proposta:** incluir `vasculhar` (`for`), `dentro` (`in`), `trilha` (`range`) e `cavar` (`def`) em K, como `KEYWORD`, com K passando de 13 para 17 palavras.
+- **Proposta:** incluir `vasculhar` (`for`), `dentro` (`in`), `trilha` (`range`) e `cavar` (`def`) em K, como `KEYWORD`.
 - **Alternativas:** manter só as 13 palavras (e então `for`, `in`, `range` e `def` não fazem parte da linguagem) ou escolher outros nomes.
 - **Efeito:** nenhum AFD muda. O conjunto K e os testes de palavras reservadas passam a incluir as quatro palavras.
 

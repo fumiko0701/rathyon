@@ -23,7 +23,7 @@ class Scanner:
     Argumentos:
         texto: código-fonte a ser escaneado.
         palavras_reservadas: conjunto K opcional. Quando omitido, usa K_PADRAO
-            (17 palavras de SPECIFICATIONS.md §4).
+            (24 palavras de SPECIFICATIONS.md §4).
         normalizar_quebras_de_linha: converte '\r\n' e '\r' para '\n' antes de
             escanear, de modo que '\r' não seja reportado como erro.
     """

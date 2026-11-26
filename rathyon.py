@@ -9,6 +9,8 @@ import os
 import re
 import json
 import code
+import tokenize
+from io import StringIO
 
 from src.lexer import Scanner
 from src.parser import parse as parse_ast
@@ -38,10 +40,20 @@ def carregar_traducao():
 
 #tradução no dicionario
 def traduzir(codigo, mapa):
-    """Troca palavras Rathyon por palavras Python no texto."""
-    for ra, py in mapa.items():
-        codigo = re.sub(rf'\b{re.escape(ra)}\b', py, codigo)
-    return codigo
+    """Traduz os nomes do console e preserva o texto entre aspas."""
+    linhas = codigo.split("\n")
+    nomes = []
+    try:
+        for token in tokenize.generate_tokens(StringIO(codigo).readline):
+            if token.type == tokenize.NAME and token.string in mapa:
+                nomes.append(token)
+    except (tokenize.TokenError, IndentationError):
+        pass  # O console também recebe comandos incompletos.
+    for token in reversed(nomes):
+        linha, inicio = token.start
+        texto = linhas[linha - 1]
+        linhas[linha - 1] = texto[:inicio] + mapa[token.string] + texto[token.end[1]:]
+    return "\n".join(linhas)
 
 def _pausar():
     """Pausa para o usuário ler antes de fechar (double-click no .ra)."""

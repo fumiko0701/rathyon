@@ -26,6 +26,9 @@
 | ----------- | ----------- | ----------------------- |
 | `queijo`    | `int`       | Declara inteiro         |
 | `migalha`   | `float`     | Declara decimal         |
+| `barriga`   | `bool`      | Declara booleano        |
+| `chiado`    | `str`       | Declara texto           |
+| `ninho`     | `list`      | Declara lista           |
 | `farejar`   | `if`        | Condicional             |
 | `refarejar` | `elif`      | Condicional alternativa |
 | `fujir`     | `else`      | Caso contrário          |
@@ -38,13 +41,18 @@
 | `dentro`    | `in`        | Usado com o `for`       |
 | `trilha`    | `range`     | Sequência de números    |
 | `cavar`     | `def`       | Define uma função       |
+| `procure`   | `import`    | Importa um módulo       |
+| `seguir`    | `continue`  | Vai à próxima repetição |
+| `cace`      | `switch`    | Seleciona um caso       |
+| `presa`     | `case`      | Define uma alternativa  |
 
 ### Operadores
 
 - **Aritméticos:** `+  -  *  /`
 - **Comparação:** `==  !=  <  >  <=  >=`
 - **Atribuição:** `=`
-- **Comentários e texto entre aspas:** ainda não são aceitos pelo interpretador.
+- **Strings:** use aspas duplas; escapes como `\n`, `\t`, `\\` e `\"` são aceitos.
+- **Comentários:** ainda não são aceitos pelo interpretador.
 
 ### Regiões
 
@@ -63,6 +71,10 @@ As regiões `entrada` e `saida` são executadas no início e no fim do programa.
 - Declarações, atribuições e chamadas terminam com `;`; blocos usam `{}`.
 - Atribuir um valor cria a variável, mesmo sem declaração prévia.
 - `queijo` converte o valor inicial para inteiro; atribuições posteriores não verificam o tipo.
+- `barriga`, `chiado` e `ninho` declaram booleanos, textos e listas. Listas usam `[]`, aceitam acesso por índice e podem ser percorridas com `vasculhar`.
+- Parâmetros de funções podem receber tipo: `cavar somar(queijo a, queijo b) { voltar a + b; }`. Funções sem anotação continuam aceitas.
+- `procure math;` importa um módulo Python; seus membros podem ser chamados com ponto, como `math.sqrt(4)`.
+- `cace valor { presa 1 { ... } fujir { ... } }` executa o primeiro caso correspondente; `fujir` é opcional e funciona como padrão.
 - Não há entrada de dados (`input`) nesta versão.
 
 ---

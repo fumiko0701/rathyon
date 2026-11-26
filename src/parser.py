@@ -9,12 +9,14 @@ Sintaxe implementada conforme a proposta recebida:
 - instruções simples terminadas em ;;
 - condicionais: farejar / refarejar / fujir;
 - laços: roer e vasculhar ... dentro ...;
-- funções: cavar nome(parametros) { ... };
+- funções: cavar [tipo_retorno] nome([tipo] parametro, ...) { ... };
 - eventos: ouvir nome(parametros) { ... } e sinalizar nome(argumentos);.
+- módulos: procure nome; e acesso por ponto;
+- listas: [expressao, ...], com acesso por indice;
+- selecao: cace expressao { presa valor { ... } fujir { ... } }.
 
-Strings e comentários ainda não são aceitos pelo Scanner oficial, pois não
-fazem parte da especificação léxica atual. A gramática sintática completa
-continua sendo uma proposta e depende de validação do grupo.
+Comentários ainda não são aceitos pelo Scanner oficial. A gramática sintática
+completa continua sendo uma proposta e depende de validação do grupo.
 """
 from __future__ import annotations
 
@@ -45,6 +47,7 @@ def _categoria(token: Token) -> str:
 
 
 class Parser:
+    TYPES = {"queijo", "migalha", "barriga", "chiado", "ninho"}
     # Precedência: comparação < adição/subtração < multiplicação/divisão.
     PRECEDENCE = {
         "==": 1, "!=": 1, "<": 2, "<=": 2, ">": 2, ">=": 2,
@@ -55,6 +58,7 @@ class Parser:
         self.tokens = list(tokens)
         self.pos = 0
         self.loop_depth = 0
+        self.outer_loops = 0
         self.function_depth = 0
         if not self.tokens or _categoria(self.tokens[-1]) != "EOF":
             if self.tokens:
@@ -111,6 +115,15 @@ class Parser:
         self.expect("}")
         return node("Block", body=body)
 
+    def routine_block(self):
+        """O seguir de uma função ou evento só vale para os laços abertos nela."""
+        previous = self.outer_loops
+        self.outer_loops = self.loop_depth
+        try:
+            return self.block()
+        finally:
+            self.outer_loops = previous
+
     def statement(self):
         if _categoria(self.current()) == "REGION_START":
             name = self.current().lexema
@@ -127,6 +140,14 @@ class Parser:
             name = self.current().lexema
             self.pos += 1
             return node("GotoRegion", name=name)
+
+        if self.accept("procure"):
+            name = self.identifier()
+            self.expect(";")
+            return node("Import", name=name)
+
+        if self.accept("cace"):
+            return self.switch()
 
         if self.at("farejar"):
             return self.conditional()
@@ -152,19 +173,26 @@ class Parser:
             return node("For", variable=variable, iterable=iterable, body=body)
 
         if self.accept("cavar"):
+            return_type = None
+            if self.current().lexema in self.TYPES:
+                return_type = self.current().lexema
+                self.pos += 1
             name = self.identifier()
             params = self.parameters()
             self.function_depth += 1
             try:
-                body = self.block()
+                body = self.routine_block()
             finally:
                 self.function_depth -= 1
-            return node("Function", name=name, params=params, body=body)
+            function = node("Function", name=name, params=params, body=body)
+            if return_type:
+                function["return_type"] = return_type
+            return function
 
         if self.accept("ouvir"):
             name = self.identifier()
-            params = self.parameters()
-            return node("EventHandler", name=name, params=params, body=self.block())
+            params = self.parameters(allow_types=False)
+            return node("EventHandler", name=name, params=params, body=self.routine_block())
 
         if self.accept("sinalizar"):
             name = self.identifier()
@@ -172,7 +200,7 @@ class Parser:
             self.expect(";")
             return node("Emit", name=name, arguments=args)
 
-        if self.at("queijo") or self.at("migalha"):
+        if self.current().lexema in self.TYPES:
             data_type = self.current().lexema
             self.pos += 1
             name = self.identifier()
@@ -193,18 +221,40 @@ class Parser:
             self.expect(";")
             return node("Break")
 
+        if self.accept("seguir"):
+            if self.loop_depth == self.outer_loops:
+                self.error("seguir só pode ser usado dentro de laço")
+            self.expect(";")
+            return node("Continue")
+
         # A atribuição é reconhecida pela categoria oficial ASSIGNMENT.
-        if (_categoria(self.current()) == "IDENTIFIER"
-                and _categoria(self.tokens[self.pos + 1]) == "ASSIGNMENT"):
+        starts_with_name = _categoria(self.current()) == "IDENTIFIER"
+        if starts_with_name and _categoria(self.tokens[self.pos + 1]) == "ASSIGNMENT":
             name = self.identifier()
             self.expect("=")
             value = self.expression()
             self.expect(";")
             return node("Assignment", name=name, value=value)
 
-        value = self.expression()
+        expr = self.expression()
+        if (starts_with_name and expr["type"] == "Index"
+                and _categoria(self.current()) == "ASSIGNMENT"):
+            base = expr["collection"]
+            parent_indices = []
+            while base["type"] == "Index":
+                parent_indices.append(base["index"])
+                base = base["collection"]
+            if base["type"] != "Identifier":
+                self.error("Esperada variável na atribuição por índice")
+            self.expect("=")
+            statement = node("IndexAssignment", name=base["name"], index=expr["index"],
+                             value=self.expression())
+            if parent_indices:
+                statement["parent_indices"] = list(reversed(parent_indices))
+        else:
+            statement = node("ExpressionStatement", expression=expr)
         self.expect(";")
-        return node("ExpressionStatement", expression=value)
+        return statement
 
     def conditional(self):
         self.expect("farejar")
@@ -214,17 +264,47 @@ class Parser:
         otherwise = self.block() if self.accept("fujir") else None
         return node("If", branches=branches, otherwise=otherwise)
 
-    def parameters(self) -> list[str]:
+    def switch(self):
+        value = self.expression()
+        self.expect("{")
+        cases = []
+        otherwise = None
+        while not self.at("}"):
+            if _categoria(self.current()) == "EOF":
+                self.error("Bloco cace não fechado; esperado '}'")
+            if self.accept("presa"):
+                case_value = self.expression()
+                cases.append({"value": case_value, "body": self.block()})
+            elif self.accept("fujir"):
+                if otherwise is not None:
+                    self.error("Apenas um fujir é permitido no cace")
+                otherwise = self.block()
+                if not self.at("}"):
+                    self.error("O bloco fujir deve ser o último no cace")
+            else:
+                self.error("Esperado 'presa' ou 'fujir' dentro de cace")
+        self.expect("}")
+        return node("Switch", value=value, cases=cases, otherwise=otherwise)
+
+    def parameters(self, *, allow_types: bool = True) -> list:
         self.expect("(")
         names = []
         if not self.at(")"):
-            names.append(self.identifier())
+            names.append(self.parameter(allow_types=allow_types))
             while self.accept(","):
-                names.append(self.identifier())
+                names.append(self.parameter(allow_types=allow_types))
         self.expect(")")
-        if len(names) != len(set(names)):
+        plain_names = [param["name"] if isinstance(param, dict) else param for param in names]
+        if len(plain_names) != len(set(plain_names)):
             self.error("Parâmetro duplicado")
         return names
+
+    def parameter(self, *, allow_types: bool = True):
+        if allow_types and self.current().lexema in self.TYPES:
+            data_type = self.current().lexema
+            self.pos += 1
+            return {"name": self.identifier(), "data_type": data_type}
+        return self.identifier()
 
     def arguments(self) -> list:
         self.expect("(")
@@ -258,35 +338,57 @@ class Parser:
         if self.accept("("):
             result = self.expression()
             self.expect(")")
-            return result
+            return self.postfix(result)
 
         if category == "INTEGER":
             self.pos += 1
-            return node("Literal", value=int(token.lexema))
+            return self.postfix(node("Literal", value=int(token.lexema)))
 
         if category == "FLOAT":
             self.pos += 1
-            return node("Literal", value=float(token.lexema))
+            return self.postfix(node("Literal", value=float(token.lexema)))
 
-        # Mantém compatibilidade futura caso o Lexer passe a emitir STRING.
         if category == "STRING":
             self.pos += 1
-            return node("String", raw=token.lexema)
+            return self.postfix(node("Literal", value=json.loads(token.lexema)))
+
+        if self.accept("["):
+            items = []
+            if not self.at("]"):
+                items.append(self.expression())
+                while self.accept(","):
+                    if self.at("]"):
+                        break
+                    items.append(self.expression())
+            self.expect("]")
+            return self.postfix(node("List", items=items))
 
         if self.accept("cheio"):
-            return node("Literal", value=True)
+            return self.postfix(node("Literal", value=True))
         if self.accept("vazio"):
-            return node("Literal", value=False)
+            return self.postfix(node("Literal", value=False))
 
         if category == "IDENTIFIER" or token.lexema in {"guinchar", "trilha", "queijo", "migalha"}:
             name = token.lexema
             self.pos += 1
-            expression = node("Identifier", name=name)
-            while self.at("("):
-                expression = node("Call", callee=expression, arguments=self.arguments())
-            return expression
+            return self.postfix(node("Identifier", name=name))
 
         self.error("Esperada expressão")
+
+    def postfix(self, expression):
+        while True:
+            if self.at("("):
+                expression = node("Call", callee=expression,
+                                  arguments=self.arguments())
+            elif self.accept("."):
+                expression = node("Attribute", object=expression,
+                                  name=self.identifier())
+            elif self.accept("["):
+                index = self.expression()
+                self.expect("]")
+                expression = node("Index", collection=expression, index=index)
+            else:
+                return expression
 
 
 def parse_tokens(tokens: Sequence[Token]):

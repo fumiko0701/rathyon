@@ -2,11 +2,17 @@
 
 from __future__ import annotations
 
+import importlib
 import operator
 from contextlib import contextmanager
+from types import ModuleType
 
 
 class _Break(Exception):
+    pass
+
+
+class _Continue(Exception):
     pass
 
 
@@ -16,6 +22,10 @@ class _Return(Exception):
 
 
 class Executor:
+    _TIPOS = {
+        "queijo": int, "migalha": float, "barriga": bool,
+        "chiado": str, "ninho": list,
+    }
     _BIN_OPS = {
         "+": operator.add, "-": operator.sub, "*": operator.mul, "/": operator.truediv,
         "==": operator.eq, "!=": operator.ne,
@@ -30,8 +40,7 @@ class Executor:
         self.globals = {
             "__name__": "__main__",
             "guinchar": print,
-            "queijo": int,
-            "migalha": float,
+            **self._TIPOS,
             "trilha": range,
         }
         self.eventos = {}
@@ -61,22 +70,47 @@ class Executor:
     def _exec_GotoRegion(self, n):
         raise RuntimeError("GotoRegion só pode aparecer dentro de um bloco executável")
 
+    def _exec_Import(self, n):
+        self.globals[n["name"]] = importlib.import_module(n["name"])
+
+    def _validar_tipo(self, nome_tipo, valor, contexto):
+        if nome_tipo and type(valor) is not self._TIPOS.get(nome_tipo):
+            raise RuntimeError(
+                f"{contexto}: esperado {nome_tipo}, recebido {type(valor).__name__}"
+            )
+
     def _exec_Declaration(self, n):
-        val = self.eval(n["value"]) if n["value"] else (
-            0 if n["data_type"] == "queijo" else 0.0)
-        if n["data_type"] == "queijo":
-            val = int(val)
-        elif n["data_type"] == "migalha":
-            val = float(val)
+        tipo = self._TIPOS[n["data_type"]]
+        val = self.eval(n["value"]) if n["value"] is not None else tipo()
+        if tipo in (int, float):
+            val = tipo(val)
+        else:
+            self._validar_tipo(n["data_type"], val, f"Inicialização de {n['name']!r}")
         self.globals[n["name"]] = val
 
     def _exec_Assignment(self, n):
         self.globals[n["name"]] = self.eval(n["value"])
 
+    def _exec_IndexAssignment(self, n):
+        collection = self.globals[n["name"]]
+        for parent in n.get("parent_indices", ()):
+            collection = collection[self._eval_index(parent)]
+        index = self._eval_index(n["index"])
+        collection[index] = self.eval(n["value"])
+
     def _exec_If(self, n):
         for ramo in n["branches"]:
             if self.eval(ramo["condition"]):
                 self.exec_node(ramo["body"])
+                return
+        if n["otherwise"]:
+            self.exec_node(n["otherwise"])
+
+    def _exec_Switch(self, n):
+        value = self.eval(n["value"])
+        for case in n["cases"]:
+            if value == self.eval(case["value"]):
+                self.exec_node(case["body"])
                 return
         if n["otherwise"]:
             self.exec_node(n["otherwise"])
@@ -87,6 +121,8 @@ class Executor:
                 self.exec_node(n["body"])
             except _Break:
                 break
+            except _Continue:
+                continue
 
     def _exec_For(self, n):
         for item in self.eval(n["iterable"]):
@@ -95,17 +131,34 @@ class Executor:
                 self.exec_node(n["body"])
             except _Break:
                 break
+            except _Continue:
+                continue
 
     def _exec_Function(self, n):
         """Cria a função com escopo temporário de parâmetros (restaura globals ao sair)."""
-        def _fn(*args, _p=n["params"], _b=n["body"]):
-            with self._escopo(dict(zip(_p, args))):
+        nome, params, body = n["name"], n["params"], n["body"]
+        retorno = n.get("return_type")
+        nomes = [p["name"] if isinstance(p, dict) else p for p in params]
+        tipados = [(i, p) for i, p in enumerate(params) if isinstance(p, dict)]
+
+        def _fn(*args):
+            if (retorno or tipados) and len(args) != len(nomes):
+                raise RuntimeError(
+                    f"Função {nome!r} espera {len(nomes)} argumento(s), recebeu {len(args)}"
+                )
+            for i, p in tipados:
+                self._validar_tipo(p["data_type"], args[i],
+                                   f"Parâmetro {p['name']!r} da função {nome!r}")
+            with self._escopo(dict(zip(nomes, args))):
                 try:
-                    self.exec_node(_b)
+                    self.exec_node(body)
                 except _Return as r:
+                    self._validar_tipo(retorno, r.value, f"Retorno da função {nome!r}")
                     return r.value
+            if retorno:
+                raise RuntimeError(f"Função {nome!r} terminou sem retornar {retorno}")
             return None
-        self.globals[n["name"]] = _fn
+        self.globals[nome] = _fn
 
     def _exec_EventHandler(self, n):
         self.eventos[n["name"]] = (n["params"], n["body"])
@@ -118,6 +171,9 @@ class Executor:
 
     def _exec_Break(self, n):
         raise _Break()
+
+    def _exec_Continue(self, n):
+        raise _Continue()
 
     def _exec_ExpressionStatement(self, n):
         self.eval(n["expression"])
@@ -224,6 +280,9 @@ class Executor:
     def _eval_Literal(self, n):
         return n["value"]
 
+    def _eval_List(self, n):
+        return [self.eval(item) for item in n["items"]]
+
     def _eval_Identifier(self, n):
         if n["name"] not in self.globals:
             raise RuntimeError(f"Variável não definida: {n['name']}")
@@ -245,5 +304,21 @@ class Executor:
         f = self.eval(n["callee"])
         args = [self.eval(a) for a in n["arguments"]]
         return f(*args)
+
+    def _eval_Attribute(self, n):
+        module = self.eval(n["object"])
+        if not isinstance(module, ModuleType):
+            raise RuntimeError("O acesso por ponto só pode ser usado em módulos")
+        return getattr(module, n["name"])
+
+    def _eval_index(self, expr):
+        index = self.eval(expr)
+        if type(index) is not int:
+            raise RuntimeError("O índice de uma lista deve ser inteiro")
+        return index
+
+    def _eval_Index(self, n):
+        collection = self.eval(n["collection"])
+        return collection[self._eval_index(n["index"])]
 
 

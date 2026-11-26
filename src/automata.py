@@ -104,7 +104,7 @@ def _construir_tabela_classe() -> dict[str, str]:
             tabela[c] = '_'
         elif c == '.':
             tabela[c] = '.'
-        elif c in '=!<>+-*/(){};,#':
+        elif c in '=!<>+-*/(){}[];,#':
             tabela[c] = c
     return tabela
 
@@ -115,18 +115,19 @@ _CLASSE_ASCII = _construir_tabela_classe()
 def classe_simbolo(c: str) -> Optional[str]:
     """Retorna a coluna da tabela de transição para c, ou None se c ∉ Σ.
 
-    Exemplos de fora de Σ: '@', '#', '~', 'á', '"'. Eles geram erro léxico
-    e a leitura continua.
+    Exemplos de fora dos AFDs: '@', '#', '~', 'á' e '"'. Aspas são tratadas
+    pelo reconhecedor de strings antes desta função.
     """
     return _CLASSE_ASCII.get(c)
 
 
-# Conjunto K de palavras reservadas (SPECIFICATIONS.md §4; 17 palavras).
+# Conjunto K de palavras reservadas (SPECIFICATIONS.md §4; 24 palavras).
 # Prioridade: se o lexema completo pertence a K, é KEYWORD; senão IDENTIFIER.
 K_PADRAO = frozenset({
     "farejar", "refarejar", "fujir", "roer", "voltar", "escapar",
     "queijo", "migalha", "guinchar", "ouvir", "sinalizar",
     "cheio", "vazio", "vasculhar", "dentro", "trilha", "cavar",
+    "barriga", "ninho", "seguir", "cace", "presa", "chiado", "procure",
 })
 
 
@@ -194,8 +195,10 @@ F_OP = {1, 2}
 DELTA_ARI = {(0, '+'): 1, (0, '-'): 1, (0, '*'): 1, (0, '/'): 1}
 F_ARI = {1}
 
-# Delimitadores: Q={0, q_f, q_d}, Sigma={( ) { } ; ,}, F={q_f}
-DELTA_DEL = {(0, '('): 1, (0, ')'): 1, (0, '{'): 1, (0, '}'): 1, (0, ';'): 1, (0, ','): 1}
+# Delimitadores: Q={0, q_f, q_d}, Sigma={( ) { } [ ] ; , .}, F={q_f}
+DELTA_DEL = {(0, '('): 1, (0, ')'): 1, (0, '{'): 1, (0, '}'): 1,
+             (0, '['): 1, (0, ']'): 1, (0, ';'): 1, (0, ','): 1,
+             (0, '.'): 1}
 F_DEL = {1}
 
 
@@ -316,8 +319,53 @@ def reconhecer_aritmetico(cursor: Cursor) -> Token:
 
 
 def reconhecer_delimitador(cursor: Cursor) -> Token:
-    """AFD dos delimitadores (( ) { } ; ,). Um caractere por token."""
+    """AFD dos delimitadores (( ) { } [ ] ; , .). Um caractere por token."""
     return _simples(cursor, DELTA_DEL, F_DEL, Categoria.DELIMITER)
+
+
+def reconhecer_string(cursor: Cursor):
+    """Reconhece string de aspas duplas com escapes no estilo JSON."""
+    inicio = cursor.salvar()
+    cursor.avancar()
+    erro = None
+    while not cursor.fim():
+        caractere = cursor.peek()
+        if caractere == '"':
+            cursor.avancar()
+            lexema = cursor.texto[inicio[0]:cursor.pos]
+            if erro:
+                return ErroLexico(lexema, inicio[1], inicio[2], erro)
+            return Token(Categoria.STRING, lexema, inicio[1], inicio[2])
+        if caractere == '\n':
+            lexema = cursor.texto[inicio[0]:cursor.pos]
+            return ErroLexico(lexema, inicio[1], inicio[2], erro or "string sem fechamento")
+        if caractere == '\\':
+            cursor.avancar()
+            escapado = cursor.peek()
+            if escapado is None or escapado == '\n':
+                lexema = cursor.texto[inicio[0]:cursor.pos]
+                return ErroLexico(lexema, inicio[1], inicio[2], erro or "string sem fechamento")
+            if escapado in '"\\/bfnrt':
+                cursor.avancar()
+                continue
+            if escapado == 'u':
+                cursor.avancar()
+                digitos = 0
+                while digitos < 4 and cursor.peek() is not None and cursor.peek() in '0123456789abcdefABCDEF':
+                    cursor.avancar()
+                    digitos += 1
+                if digitos != 4 and erro is None:
+                    erro = "escape Unicode inválido em string"
+                continue
+            cursor.avancar()
+            if erro is None:
+                erro = "escape inválido em string"
+            continue
+        if ord(caractere) < 0x20 and erro is None:
+            erro = "caractere de controle inválido em string"
+        cursor.avancar()
+    lexema = cursor.texto[inicio[0]:cursor.pos]
+    return ErroLexico(lexema, inicio[1], inicio[2], erro or "string sem fechamento")
 
 
 def reconhecer_qualquer(cursor: Cursor, palavras_reservadas: Iterable[str]):
@@ -329,16 +377,22 @@ def reconhecer_qualquer(cursor: Cursor, palavras_reservadas: Iterable[str]):
     c = cursor.peek()
     if c is None:
         return None
+    if c == '"':
+        return reconhecer_string(cursor)
     cls = classe_simbolo(c)
     if cls in ('L', '_'):
         return reconhecer_identificador(cursor, palavras_reservadas)
+    if cls == '.':
+        proximo = cursor.texto[cursor.pos + 1:cursor.pos + 2]
+        if classe_simbolo(proximo) in ('L', '_'):
+            return reconhecer_delimitador(cursor)
     if cls in ('D', '.'):
         return reconhecer_numero(cursor)
     if cls in ('=', '!', '<', '>'):
         return reconhecer_relacional(cursor)
     if cls in ('+', '-', '*', '/'):
         return reconhecer_aritmetico(cursor)
-    if cls in ('(', ')', '{', '}', ';', ','):
+    if cls in ('(', ')', '{', '}', '[', ']', ';', ','):
         return reconhecer_delimitador(cursor)
     if cls == '#':
         return reconhecer_diretiva(cursor)

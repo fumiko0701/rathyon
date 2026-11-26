@@ -120,11 +120,11 @@
             "patterns": [
                 {
                     "name": "keyword.control.flow.rathyon",
-                    "match": "\\b(farejar|refarejar|fujir|roer|escapar|voltar)\\b"
+                    "match": "\\b(farejar|refarejar|fujir|roer|escapar|voltar|seguir|cace|presa)\\b"
                 },
                 {
                     "name": "storage.type.rathyon",
-                    "match": "\\b(queijo|migalha)\\b"
+                    "match": "\\b(queijo|migalha|barriga|chiado|ninho)\\b"
                 },
                 {
                     "name": "constant.language.boolean.rathyon",
@@ -133,6 +133,10 @@
                 {
                     "name": "support.function.builtin.rathyon",
                     "match": "\\b(guinchar|trilha|vasculhar|cavar)\\b"
+                },
+                {
+                    "name": "keyword.control.import.rathyon",
+                    "match": "\\bprocure\\b"
                 },
                 {
                     "name": "keyword.other.event.rathyon",

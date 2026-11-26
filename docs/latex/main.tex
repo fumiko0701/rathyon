@@ -127,7 +127,7 @@ Autômatos finitos são modelos matemáticos utilizados para reconhecer linguage
 Foram reunidas as palavras e os símbolos previstos para a linguagem. Depois, foram definidos padrões para os tokens e implementados reconhecedores por meio de autômatos. Os testes do projeto verificam o Scanner, o Parser e casos de integração.
 \section{Desenvolvimento do Scanner}
 \subsection{Especificação da Linguagem e Categorias de Tokens}
-A proposta considera palavras reservadas, identificadores, números inteiros e decimais, operadores e delimitadores.
+A proposta considera palavras reservadas, identificadores, números inteiros e decimais, strings entre aspas duplas, operadores e delimitadores. Colchetes são delimitadores usados em listas.
 
 A lista completa e as decisões pendentes estão em \href{../markdown/SPECIFICATIONS.md}{SPECIFICATIONS.md}.
 \subsection{Modelagem Matemática e Expressões Regulares}
@@ -137,7 +137,7 @@ Um identificador segue o padrão \texttt{(L|\_)(L|D|\_)*}, em que L representa u
 
 \subsection{Implementação e Funcionamento do Scanner}
 
-O Scanner implementado em \texttt{src/lexer.py} reconhece tokens e registra suas posições no código. Ele também reconhece as diretivas \texttt{\#tunel}, \texttt{\#toca} e \texttt{\#vaparatunel} por uma regra específica. O Parser, em \texttt{src/parser.py}, usa esses tokens para montar a árvore do programa. O Executor, em \texttt{src/executor.py}, percorre essa árvore e executa as instruções.
+O Scanner implementado em \texttt{src/lexer.py} reconhece tokens e registra suas posições no código. Strings são reconhecidas por uma regra própria, com aspas duplas e escapes definidos na especificação. Ele também reconhece as diretivas \texttt{\#tunel}, \texttt{\#toca} e \texttt{\#vaparatunel} por uma regra específica. O Parser, em \texttt{src/parser.py}, usa esses tokens para montar a árvore do programa. O Executor, em \texttt{src/executor.py}, percorre essa árvore e executa as instruções.
 
 \subsection{Tratamento de Erros Léxicos}
 

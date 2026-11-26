@@ -4,7 +4,7 @@
 
 Documentar os padrões de identificadores, inteiros, decimais, operadores, delimitadores e palavras reservadas da Linguagem do Rato, explicando a prioridade de classificação de KEYWORD sobre IDENTIFIER.
 
-Este documento utiliza a Especificação Léxica da Linguagem do Rato, versão 1.0 (rascunho para aprovação), sem alterar suas expressões ou regras.
+Este documento registra os padrões atuais do Scanner e mantém separados os reconhecedores por AFD e o reconhecimento especial de strings.
 
 ## 2. Notação
 
@@ -26,7 +26,7 @@ Nas expressões abaixo, os caracteres dos operadores e delimitadores representam
 
 ## 3. Expressões regulares
 
-As expressões abaixo são mantidas conforme a seção 3 da especificação original.
+As expressões abaixo descrevem os padrões reconhecidos pelo Scanner atual.
 
 ```text
 IDENTIFIER = (letra | _)(letra | digito | _)*
@@ -41,11 +41,16 @@ RELATIONAL = == | != | >= | <= | > | <
 
 ASSIGNMENT = =
 
-DELIMITER = ( | ) | { | } | ; | ,
+DELIMITER = ( | ) | { | } | [ | ] | ; | , | . (acesso a módulo)
+
+STRING = aspas_duplas (caractere imprimível, exceto aspas e barra_invertida | escape_JSON)* aspas_duplas
+
+escape_JSON = \\ ( \" | \\ | / | b | f | n | r | t | u HEX HEX HEX HEX )
 
 KEYWORD = farejar | refarejar | fujir | roer | queijo | migalha
           | guinchar | ouvir | sinalizar | voltar | escapar | cheio
-          | vazio | vasculhar | dentro | trilha | cavar
+          | vazio | vasculhar | dentro | trilha | cavar | barriga
+          | chiado | ninho | seguir | cace | presa | procure
 ```
 
 **Diretivas de região.** Não pertencem às categorias acima. Sejam `ESP = (espaço | tab)` e `RESTO = (qualquer caractere exceto \n)*`:
@@ -92,11 +97,11 @@ Reconhece o símbolo de atribuição `=`.
 
 ### 4.7 DELIMITER
 
-Reconhece um dos delimitadores: `(`, `)`, `{`, `}`, `;` ou `,`.
+Reconhece um dos delimitadores: `(`, `)`, `{`, `}`, `[`, `]`, `;`, `,` ou `.` antes de um nome de módulo ou membro.
 
 ### 4.8 KEYWORD
 
-Reconhece exatamente uma das 17 palavras reservadas:
+Reconhece exatamente uma das 24 palavras reservadas:
 
 | Palavra reservada |
 |---|
@@ -113,12 +118,19 @@ Reconhece exatamente uma das 17 palavras reservadas:
 | escapar |
 | cheio |
 | vazio |
+| barriga |
+| chiado |
+| ninho |
 | vasculhar |
 | dentro |
 | trilha |
 | cavar |
+| procure |
+| seguir |
+| cace |
+| presa |
 
-Conforme a especificação atual, `cheio` e `vazio` pertencem à categoria KEYWORD. As palavras `vasculhar`, `dentro`, `trilha` e `cavar` vêm do `teste.ra` e dependem da decisão D02 da especificação.
+`cheio` e `vazio` são valores booleanos; `barriga` é o tipo Boolean. `vasculhar`, `dentro`, `trilha` e `cavar` dependem da decisão D02 da especificação.
 
 ## 5. Prioridade de KEYWORD sobre IDENTIFIER
 
@@ -159,8 +171,8 @@ Nesta tabela, “rejeitado” significa que a entrada inteira não corresponde a
 | ARITHMETIC | `+`, `-`, `*`, `/` | `=`, `>=`, `++` |
 | RELATIONAL | `==`, `!=`, `>=`, `<=`, `>`, `<` | `!`, `=`, `=<` |
 | ASSIGNMENT | `=` | `==`, `!=`, `=<` |
-| DELIMITER | `(`, `)`, `{`, `}`, `;`, `,` | `.`, `_`, `()` |
-| KEYWORD | `farejar`, `refarejar`, `cheio`, `vazio`, `vasculhar` | `Farejar`, `farejares`, `_rato1` |
+| DELIMITER | `(`, `)`, `{`, `}`, `[`, `]`, `;`, `,` | `.`, `_`, `()` |
+| KEYWORD | `farejar`, `refarejar`, `cheio`, `vazio`, `barriga`, `chiado`, `ninho`, `seguir`, `cace`, `presa` | `Farejar`, `farejares`, `_rato1` |
 
 Embora `farejar` corresponda à expressão de IDENTIFIER, sua classificação final é KEYWORD devido à consulta ao conjunto K.
 

@@ -88,7 +88,7 @@ Foram reunidas as palavras e os símbolos previstos para a linguagem. Depois, fo
 
 ### 5.1 Especificação da linguagem e categorias de tokens
 
-A proposta considera palavras reservadas, identificadores, números inteiros e decimais, operadores e delimitadores. A lista completa e as decisões ainda pendentes estão em [SPECIFICATIONS.md](SPECIFICATIONS.md).
+A proposta considera palavras reservadas, identificadores, números inteiros e decimais, strings entre aspas duplas, operadores e delimitadores. Colchetes são delimitadores usados em listas. A lista completa e as decisões ainda pendentes estão em [SPECIFICATIONS.md](SPECIFICATIONS.md).
 
 ### 5.2 Modelagem matemática e expressões regulares
 
@@ -96,7 +96,7 @@ Os padrões e as tabelas dos autômatos estão descritos em [REGULAR_EXPRESSIONS
 
 ### 5.3 Implementação e funcionamento do Scanner
 
-O Scanner implementado em `src/lexer.py` reconhece tokens e registra suas posições no código. Ele também reconhece as diretivas `#tunel`, `#toca` e `#vaparatunel` por uma regra específica. O Parser, em `src/parser.py`, usa esses tokens para montar a árvore do programa. O Executor, em `src/executor.py`, percorre essa árvore e executa as instruções.
+O Scanner implementado em `src/lexer.py` reconhece tokens e registra suas posições no código. Strings são reconhecidas por uma regra própria, com aspas duplas e escapes definidos na especificação. Ele também reconhece as diretivas `#tunel`, `#toca` e `#vaparatunel` por uma regra específica. O Parser, em `src/parser.py`, usa esses tokens para montar a árvore do programa. O Executor, em `src/executor.py`, percorre essa árvore e executa as instruções.
 
 ### 5.4 Tratamento de erros léxicos
 

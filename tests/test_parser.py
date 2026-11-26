@@ -65,6 +65,7 @@ class TestParser(unittest.TestCase):
         function = ast["body"][0]
         self.assertEqual(function["type"], "Function")
         self.assertEqual(function["params"], ["a", "b"])
+        self.assertNotIn("return_type", function)
         self.assertEqual(function["body"]["body"][0]["type"], "Return")
 
     def test_evento_e_sinalizar(self):
@@ -88,11 +89,13 @@ class TestParser(unittest.TestCase):
         with self.assertRaises(RathyonLexicalError):
             parse("queijo x = @;")
 
-    def test_string_nao_suportada_pelo_lexer_atual(self):
-        # Strings estão fora da especificação léxica atual; não devem ser
-        # silenciosamente aceitas pelo Parser.
-        with self.assertRaises(RathyonLexicalError):
-            parse('guinchar("oi");')
+    def test_string_tipado_passado_para_funcao(self):
+        ast = parse(
+            'cavar eco(chiado texto) { voltar texto; } '
+            'chiado nome = "eae"; guinchar(eco(nome));'
+        )
+        chamada = ast["body"][2]["expression"]
+        self.assertEqual(chamada["arguments"][0]["type"], "Call")
 
     def test_diretivas_de_regiao_com_nova_sintaxe(self):
         ast = parse(
