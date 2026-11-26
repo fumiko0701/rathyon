@@ -1,12 +1,24 @@
 queijo idade = 20;
-queijo limite = 18;
+migalha altura = 1.75;
+barriga conectado = cheio;
+chiado apelido = "Rato";
+ninho pontos = [10, 20, 30];
 
-farejar idade > limite {
-    guinchar(idade);
+idade = idade + 1;
+pontos[1] = 25;
+
+farejar idade > 18 {
+    guinchar("bloco condicional");
+} refarejar idade == 18 {
+    guinchar("bloco alternativo");
+} fujir {
+    guinchar("bloco senao");
 }
 
-cavar somar(a, b) {
+cavar queijo somar(queijo a, queijo b) {
     voltar a + b;
 }
 
 queijo resultado = somar(10, 20);
+guinchar(resultado);
+guinchar(pontos);

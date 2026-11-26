@@ -1,12 +1,21 @@
-#tunel inicio
-queijo idade = 20;
-guinchar(idade);
+#tunel saida
+guinchar("SAIDA");
 #toca
 
-#tunel verificacao
-farejar idade > 18 {
-    guinchar(idade);
-}
+#tunel passagem
+guinchar("PASSAGEM");
 #toca
 
-#vaparatunel verificacao
+#vaparatunel destino
+
+#tunel ignorada
+guinchar("ERRO: REGIAO IGNORADA");
+#toca
+
+#tunel destino
+guinchar("DESTINO");
+#toca
+
+#tunel entrada
+guinchar("ENTRADA");
+#toca

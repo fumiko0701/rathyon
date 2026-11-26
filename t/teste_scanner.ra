@@ -1,0 +1,20 @@
+queijo inteiro = 123;
+migalha decimal = 45.67;
+chiado texto = "linha 1\nlinha 2\t!";
+barriga verdadeiro = cheio;
+barriga falso = vazio;
+ninho itens = [1, 2, 3];
+
+guinchar(inteiro);
+guinchar(decimal);
+guinchar(texto);
+guinchar(verdadeiro);
+guinchar(falso);
+guinchar(itens);
+
+farejar inteiro >= 100 {
+    guinchar("operador relacional >= reconhecido");
+}
+farejar inteiro != 0 {
+    guinchar("operador != reconhecido");
+}

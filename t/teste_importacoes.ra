@@ -1,0 +1,7 @@
+procure math;
+
+migalha raiz = math.sqrt(81);
+migalha seno = math.sin(0);
+
+guinchar(raiz);
+guinchar(seno);

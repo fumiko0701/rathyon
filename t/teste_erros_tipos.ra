@@ -1,0 +1,5 @@
+cavar queijo dobrar(queijo valor) {
+    voltar valor * 2;
+}
+
+guinchar(dobrar("texto"));

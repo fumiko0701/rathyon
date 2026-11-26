@@ -1,13 +1,31 @@
 queijo contador = 0;
 
-roer contador < 10 {
+roer contador < 7 {
     contador = contador + 1;
+
+    farejar contador == 2 {
+        seguir;
+    }
 
     farejar contador == 5 {
         escapar;
     }
+
+    guinchar(contador);
 }
 
-vasculhar item dentro itens {
+vasculhar item dentro trilha(6) {
+    farejar item == 1 {
+        seguir;
+    }
+
+    farejar item == 4 {
+        escapar;
+    }
+
     guinchar(item);
+}
+
+vasculhar valor dentro [10, 20, 30] {
+    guinchar(valor);
 }

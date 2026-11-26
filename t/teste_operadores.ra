@@ -1,0 +1,15 @@
+queijo a = 8;
+queijo b = 3;
+
+guinchar(a + b);
+guinchar(a - b);
+guinchar(a * b);
+guinchar(a / b);
+guinchar(-b);
+
+farejar a == 8 { guinchar("igual"); }
+farejar a != b { guinchar("diferente"); }
+farejar a > b { guinchar("maior"); }
+farejar a >= 8 { guinchar("maior ou igual"); }
+farejar b < a { guinchar("menor"); }
+farejar b <= 3 { guinchar("menor ou igual"); }

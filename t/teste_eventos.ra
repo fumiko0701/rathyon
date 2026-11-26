@@ -1,10 +1,11 @@
 ouvir jogador_entrou(nome) {
-    guinchar(nome);
+    guinchar("Entrou: " + nome);
 }
 
 ouvir jogador_saiu(nome) {
-    guinchar(nome);
+    guinchar("Saiu: " + nome);
 }
-nome = "eae"
+
+chiado nome = "Rathyon";
 sinalizar jogador_entrou(nome);
-sinalizar jogador_saiu(nome);
+sinalizar jogador_saiu("Visitante");

@@ -1,0 +1,8 @@
+ninho matriz = [[1, 2], [3, 4]];
+ninho linha = matriz[1];
+matriz[1][0] = 30;
+matriz[0][1] = 20;
+
+guinchar(matriz);
+guinchar(linha);
+guinchar(matriz[1][0]);

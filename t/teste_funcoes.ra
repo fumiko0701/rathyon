@@ -1,0 +1,21 @@
+cavar queijo somar(queijo a, queijo b) {
+    voltar a + b;
+}
+
+cavar migalha metade(migalha valor) {
+    voltar valor / 2;
+}
+
+cavar eco(texto) {
+    voltar texto;
+}
+
+queijo total = somar(10, 20);
+migalha resultado = metade(9.0);
+chiado mensagem = eco("função Rathyon");
+
+guinchar(total);
+guinchar(resultado);
+guinchar(mensagem);
+guinchar(queijo(3.9));
+guinchar(migalha(5));

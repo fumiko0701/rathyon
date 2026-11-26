@@ -1,0 +1,18 @@
+queijo idade = 20;
+queijo resultado = 0;
+
+farejar idade < 18 {
+    resultado = 1;
+} refarejar idade == 18 {
+    resultado = 2;
+} fujir {
+    resultado = 3;
+}
+
+guinchar(resultado);
+
+farejar vazio {
+    guinchar(100);
+} fujir {
+    guinchar(200);
+}

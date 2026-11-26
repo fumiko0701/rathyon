@@ -1,42 +1,66 @@
-queijo idade = 20;
-migalha limite = 18;
-queijo resultado = 10 + 5 * 2;
-queijo ativo = cheio;
+#tunel saida
+guinchar("FIM DO PROGRAMA");
+#toca
 
-farejar idade > limite {
-    guinchar(idade);
-} refarejar idade == limite {
-    guinchar(limite);
+#tunel entrada
+guinchar("INICIO DO PROGRAMA");
+#toca
+
+procure math;
+
+queijo idade = 20;
+migalha altura = 1.75;
+barriga ativo = cheio;
+chiado nome = "Rathyon";
+ninho numeros = [1, 2, 3];
+
+guinchar(idade);
+guinchar(altura);
+guinchar(ativo);
+guinchar(nome);
+
+farejar idade >= 18 {
+    guinchar("maior de idade");
+} refarejar idade == 17 {
+    guinchar("quase maior");
 } fujir {
-    guinchar(resultado);
+    guinchar("menor de idade");
 }
 
-roer idade > 0 {
-    idade = idade - 1;
-
-    farejar idade == 5 {
-        escapar;
+queijo contador = 0;
+roer contador < 4 {
+    contador = contador + 1;
+    farejar contador == 2 {
+        seguir;
     }
+    guinchar(contador);
 }
 
 vasculhar item dentro trilha(3) {
     guinchar(item);
 }
 
-cavar somar(a, b) {
+cavar queijo somar(queijo a, queijo b) {
     voltar a + b;
 }
 
 queijo total = somar(10, 20);
 guinchar(total);
+guinchar(math.sqrt(16));
 
-ouvir jogador_entrou(nome) {
-    guinchar(nome);
+numeros[1] = 20;
+guinchar(numeros);
+
+cace contador {
+    presa 4 {
+        guinchar("selecao: quatro");
+    }
+    fujir {
+        guinchar("selecao: outro valor");
+    }
 }
 
-sinalizar jogador_entrou(42);
-
-idade = 30;
-farejar idade > 18 {
-    guinchar(idade);
+ouvir jogador_entrou(jogador) {
+    guinchar("Bem-vindo " + jogador);
 }
+sinalizar jogador_entrou("Visitante");

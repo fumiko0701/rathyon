@@ -1,76 +1,23 @@
 #tunel saida
-guinchar(99);
-#toca
-
-#tunel passagem
-guinchar(10);
-
-#tunel soma
-cavar somar(a, b) {
-    voltar a + b;
-}
-guinchar(somar(10, 20));
-#toca
-
-#tunel contagem
-vasculhar i dentro trilha(3) {
-    guinchar(i);
-}
-#toca
-
-#tunel laco
-queijo n = 5;
-roer cheio {
-    n = n - 1;
-    farejar n == 2 {
-        escapar;
-    }
-    guinchar(n);
-}
-guinchar(n);
-#toca
-
-#tunel condicional
-migalha pi = 3.14;
-farejar pi > 3 {
-    guinchar(31);
-} refarejar pi == 3 {
-    guinchar(32);
-} fujir {
-    guinchar(33);
-}
-#toca
-
-#tunel booleano
-guinchar(cheio);
-guinchar(vazio);
-#toca
-
-#tunel eventos
-ouvir jogador_entrou(nome) {
-    guinchar(nome);
-}
-sinalizar jogador_entrou(42);
-#toca
-
-#tunel repetida
-contador = contador + 1;
-guinchar(contador);
-#toca
-
-guinchar(20);
-#vaparatunel repetida
-guinchar(21);
+guinchar("SAIDA");
 #toca
 
 #tunel entrada
-
-
-guinchar(1);
-
-
-
-queijo contador = 0;
+guinchar("ENTRADA");
 #toca
 
+#tunel passagem
+guinchar("INICIO DA PASSAGEM");
 
+#vaparatunel destino_interno
+
+#tunel ignorada_interna
+guinchar("ERRO: BLOCO INTERNO IGNORADO");
+#toca
+
+#tunel destino_interno
+guinchar("DESTINO INTERNO");
+#toca
+
+guinchar("FIM DA PASSAGEM");
+#toca

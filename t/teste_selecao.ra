@@ -1,0 +1,16 @@
+queijo codigo = 2;
+
+cace codigo {
+    presa 1 {
+        guinchar("opção 1");
+    }
+    presa 2 {
+        guinchar("opção 2");
+    }
+    presa 3 {
+        guinchar("opção 3");
+    }
+    fujir {
+        guinchar("opção padrão");
+    }
+}

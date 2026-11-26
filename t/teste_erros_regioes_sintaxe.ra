@@ -1,0 +1,2 @@
+#tunel regiao_sem_fim
+guinchar("esta regiao nao foi fechada");
