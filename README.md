@@ -24,7 +24,7 @@
     <img src="https://img.shields.io/github/downloads/fumiko0701/rathyon/total?style=for-the-badge&labelColor=2c3e50&color=F29F05&logo=github&logoColor=white&label=Total%20Downloads" alt="Total Downloads">
   </a>
   <a href="https://github.com/fumiko0701/rathyon/releases/latest">
-    <img src="https://img.shields.io/github/downloads/fumiko0701/rathyon/latest/total?style=for-the-badge&labelColor=2c3e50&color=BF4904&logo=github&logoColor=white&label=Downloads%20Release" alt="Latest Release Downloads">
+    <img src="https://img.shields.io/github/downloads/fumiko0701/rathyon/latest/total?style=for-the-badge&labelColor=2c3e50&color=BF4904&logo=github&logoColor=white&label=Latest%20Release" alt="Latest Release Downloads">
   </a>
 </p>
 
