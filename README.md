@@ -18,6 +18,20 @@
 - **Plataforma do instalador:** Windows
 
 ---
+
+<p align="center">
+  <a href="https://github.com/fumiko0701/rathyon/releases/latest">
+    <img src="https://img.shields.io/github/downloads/fumiko0701/rathyon/total?style=for-the-badge&label=Downloads%20totais&color=F29F05" alt="Downloads totais">
+  </a>
+  <a href="https://github.com/fumiko0701/rathyon/releases/latest">
+    <img src="https://img.shields.io/github/downloads/fumiko0701/rathyon/latest/total?style=for-the-badge&label=%C3%9Altima%20vers%C3%A3o&color=BF4904" alt="Downloads da última versão">
+  </a>
+  <a href="https://github.com/fumiko0701/rathyon/releases/latest">
+    <img src="https://img.shields.io/github/downloads/fumiko0701/rathyon/latest/rathyon_setup.exe?style=for-the-badge&label=Instalador&color=F20544" alt="Downloads do instalador">
+  </a>
+</p>
+
+
 ## Referência da linguagem
 
 ### Palavras-chave
