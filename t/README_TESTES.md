@@ -69,6 +69,5 @@ python rathyon.py t/teste_erros_regioes_reservadas.ra
 
 ## Limitações que os testes respeitam
 
-- Comentários ainda não fazem parte da sintaxe aceita pelo Scanner; por isso, os `.ra` não usam comentários.
 - Os testes de erro são intencionalmente inválidos e não devem ser incluídos na sequência de testes de sucesso.
 - A saída exata do sistema pode variar quando funções importadas dependem de valores de ponto flutuante; compare o valor e o comportamento, não uma quantidade excessiva de casas decimais.
