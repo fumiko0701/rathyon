@@ -1,0 +1,19 @@
+Lista pra atualizar
+
+
+1. todas as documentação que fala que a linguagem  não aceita comentario está errada, pois agora ele aceita
+
+2. atualizar o automata.md " Palavras reservadas " lá diz que são 17, porém, com as atualizações, a quantidade aumentou
+
+3. Relatório em Markdown, LaTeX e PDF -> falta falar a forma a qual é utilizada para reproduzir as verificações
+
+4. O latex já explica que o Scanner reconhece strings entre aspas duplas e que os colchetes são delimitadores usados em listas. O PDF versionado omite essas informações.
+
+5. Links para os exemplos práticos no REDME.md, para facilitar a navegação
+
+6. deixar todos os termos reservados no Json, em palavras reservadas.json 
+
+7. SPECIFICATIONS.md e REGULAR_EXPRESSIONS.md — Alinhar as regras de ponto e strings com o Scanner
+
+8. Incluir as tabelas e simulações que já estão em AUTOMATA.md no Markdown e no látex
+ 
