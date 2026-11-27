@@ -1,0 +1,3 @@
+# Dependências opcionais para o benchmark de eficiência (geração de gráficos).
+# Não afeta o build do PyInstaller (usado em requirements.txt na raiz).
+matplotlib>=3.8
